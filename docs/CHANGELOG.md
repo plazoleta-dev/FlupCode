@@ -5,6 +5,19 @@ the website links to — are on
 [GitHub Releases](https://github.com/rldona/FlupCode/releases); this file keeps the same history in
 the repository, one section per version, oldest last.
 
+## 4.3.0
+
+- The right-hand panel of a code session is now a **session rail**, opened from the list icon in the
+  top bar: Environment (computer, folder, branch and the remote control switch), Context, Tasks,
+  Background tasks (the session's shell commands and subagents, running and finished), Changes
+  (totals, commit, changed files and the branch's pull request with its checks) and Connectors (MCP
+  servers and their sign-in). Each module has a short and a full form, and they are reordered by
+  dragging them or with Alt+↑/↓; the order is remembered (#578).
+- **Files** has its own button in the top bar (#578).
+- Your computers share sessions: a desktop app can drive another computer through remote control by
+  pasting its pairing link, the sidebar lists the sessions of every paired computer beside its own,
+  and a repository shows once whichever computer its sessions live on (#575, #576, #577).
+
 ## 4.2.1
 
 - The app icon now appears on Ubuntu when FlupCode is installed from the `.deb` or `.rpm`: Linux
