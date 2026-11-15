@@ -87,6 +87,14 @@ export function TopStrip() {
             ? { open: !app.settings.contextHidden(), onToggle: app.settings.toggleContextPanel }
             : undefined
         }
+        files={
+          app.sessions.codeChrome() && !app.router.toolScreen() && app.sessions.vcsDirectory()
+            ? {
+                open: app.router.filesOpen(),
+                onToggle: () => (app.router.filesOpen() ? app.router.leaveScreen() : app.router.go("files")),
+              }
+            : undefined
+        }
         onTogglePanel={app.settings.togglePanel}
         openPanels={app.settings.panels()}
         remote={

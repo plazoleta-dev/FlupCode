@@ -298,6 +298,7 @@ export function createConnection(app: AppStores) {
     engineVersionMismatch,
     harnessCapabilities,
     harnessServerUrl,
+    hostRemote,
     health,
     historyImport,
     hostRemotePill,

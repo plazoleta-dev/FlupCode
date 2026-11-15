@@ -1,4 +1,4 @@
-import { Show, type Component } from "solid-js"
+import { Show, Suspense, lazy, type Component } from "solid-js"
 import { AppContext, type AppStores } from "./app-context"
 import { createConnection } from "./features/connection/store"
 import { createSettings } from "./features/settings/store"
@@ -29,6 +29,9 @@ import { WorkspacePanels } from "./components/WorkspacePanels"
  * before it hold: a memo or a resource reads its sources as soon as it exists. What a store reads
  * later, in an effect or a handler, can come from any of them.
  */
+// Only drawn while the reader has it open, so it stays out of the main chunk.
+const SessionRail = lazy(() => import("./features/workspace/SessionRail"))
+
 export const App: Component = () => {
   const app = {} as AppStores
   app.connection = createConnection(app)
@@ -152,20 +155,16 @@ export const App: Component = () => {
               />
             </PanelBoundary>
             <Show when={app.settings.contextPanelShown()}>
-              <PanelBoundary name={t("The details panel")}>
+              <PanelBoundary name={t("The session rail")}>
                 <RightAside
-                  subagents={app.sessions.visibleSubagents()}
-                  onClearSubagents={app.sessions.clearSubagents}
-                  onOpenSubagent={app.sessions.selectSession}
-                  runningSubagents={Object.keys(app.sessions.runState()).filter((id) => app.sessions.runState()[id])}
-                  blockedSubagents={app.sessions.blockedSessions()}
-                  memories={app.sessions.memoriesUsed()}
-                  tasks={app.sessions.tasks()}
-                  onClearTasks={app.sessions.clearTasks}
                   width={app.settings.contextWidth()}
                   onResize={app.settings.updateContextWidth}
                   onHide={app.settings.toggleContextPanel}
-                />
+                >
+                  <Suspense>
+                    <SessionRail />
+                  </Suspense>
+                </RightAside>
               </PanelBoundary>
             </Show>
           </Show>

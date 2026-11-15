@@ -83,6 +83,8 @@ export const ICONS = {
   sidebar: "M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM9 4v16",
   // The left sidebar's icon, mirrored.
   "context-panel": "M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM15 4v16",
+  // The session rail's toggle: a bulleted list, like the rail's stack of modules.
+  list: "M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01",
   preview: "M3 5h18v14H3zM3 9h18M6 7h.01M9 7h.01",
   eye: "M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6ZM12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5Z",
   terminal: "m5 7 5 5-5 5M12 18h7",

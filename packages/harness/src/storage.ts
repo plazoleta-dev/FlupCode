@@ -21,6 +21,9 @@ export const STORAGE_KEYS = {
   sidebarCollapsed: "flupcode.sidebarCollapsed",
   contextPanelHidden: "flupcode.contextPanelHidden",
   contextPanelWidth: "flupcode.contextPanelWidth",
+  /** The session rail's module order and which modules are open (dragged and folded by the reader). */
+  railOrder: "flupcode.railOrder",
+  railExpanded: "flupcode.railExpanded",
   appTextSize: "flupcode.appTextSize",
   chatTextSize: "flupcode.chatTextSize",
   clearedSubagents: "flupcode.clearedSubagents",

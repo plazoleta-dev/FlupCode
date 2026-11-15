@@ -165,7 +165,7 @@ const KEYBIND_LABELS: Record<KeybindAction, string> = {
   palette: "Search",
   newSession: "New session",
   toggleSidebar: "Toggle sidebar",
-  toggleContextPanel: "Toggle details panel",
+  toggleContextPanel: "Toggle session rail",
   settings: "Settings",
   compact: "Compact the current session",
   split: "Split view",
