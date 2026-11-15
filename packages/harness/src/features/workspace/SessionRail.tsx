@@ -33,7 +33,7 @@ const DRAG_TYPE = "application/x-flupcode-rail"
  * The reader drags a module by its header to reorder the rail, or moves it with Alt+↑/↓ on the
  * header's button; the order and what is open are kept in Settings.
  */
-export const SessionRail: Component = () => {
+export default function SessionRail() {
   const app = useApp()
   const [dragging, setDragging] = createSignal<RailModule>()
   const [drop, setDrop] = createSignal<{ target: RailModule; place: "before" | "after" }>()

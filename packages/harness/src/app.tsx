@@ -1,4 +1,4 @@
-import { Show, type Component } from "solid-js"
+import { Show, Suspense, lazy, type Component } from "solid-js"
 import { AppContext, type AppStores } from "./app-context"
 import { createConnection } from "./features/connection/store"
 import { createSettings } from "./features/settings/store"
@@ -21,7 +21,6 @@ import { Sidebar } from "./components/Sidebar"
 import { PanelBoundary } from "./components/PanelBoundary"
 import { RightAside } from "./components/RightAside"
 import { WorkspacePanels } from "./components/WorkspacePanels"
-import { SessionRail } from "./features/workspace/SessionRail"
 
 /**
  * The app: its stores, one per feature, and the shell the features are drawn in.
@@ -30,6 +29,9 @@ import { SessionRail } from "./features/workspace/SessionRail"
  * before it hold: a memo or a resource reads its sources as soon as it exists. What a store reads
  * later, in an effect or a handler, can come from any of them.
  */
+// Only drawn while the reader has it open, so it stays out of the main chunk.
+const SessionRail = lazy(() => import("./features/workspace/SessionRail"))
+
 export const App: Component = () => {
   const app = {} as AppStores
   app.connection = createConnection(app)
@@ -159,7 +161,9 @@ export const App: Component = () => {
                   onResize={app.settings.updateContextWidth}
                   onHide={app.settings.toggleContextPanel}
                 >
-                  <SessionRail />
+                  <Suspense>
+                    <SessionRail />
+                  </Suspense>
                 </RightAside>
               </PanelBoundary>
             </Show>
