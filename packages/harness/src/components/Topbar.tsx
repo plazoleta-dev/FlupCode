@@ -129,8 +129,33 @@ export const Topbar: Component<TopbarProps> = (props) => {
         {props.sessionTitle}
       </div>
       <div class="fc-topbar-right">
-        {props.sessionActions}
+        <Show when={props.contextPanel}>
+          {(panel) => (
+            <button
+              class="fc-nav-arrow"
+              classList={{ "fc-nav-arrow-active": panel().open }}
+              type="button"
+              title={t("Session rail")}
+              aria-label={t("Session rail")}
+              aria-pressed={panel().open}
+              onClick={panel().onToggle}
+            >
+              <Icon name="list" size={16} />
+            </button>
+          )}
+        </Show>
         <Show when={props.codeChrome}>
+          <button
+            class="fc-nav-arrow"
+            classList={{ "fc-nav-arrow-active": props.openPanels.includes("terminal") }}
+            type="button"
+            title={t("Terminal")}
+            aria-label={t("Terminal")}
+            aria-pressed={props.openPanels.includes("terminal")}
+            onClick={() => props.onTogglePanel("terminal")}
+          >
+            <Icon name="terminal" size={16} />
+          </button>
           <button
             class="fc-nav-arrow"
             classList={{ "fc-nav-arrow-active": props.openPanels.includes("diff") }}
@@ -168,16 +193,36 @@ export const Topbar: Component<TopbarProps> = (props) => {
               <Icon name="preview" size={16} />
             </button>
           </Show>
+        </Show>
+        <Show when={props.files}>
+          {(files) => (
+            <button
+              class="fc-nav-arrow"
+              classList={{ "fc-nav-arrow-active": files().open }}
+              type="button"
+              title={t("Files")}
+              aria-label={t("Files")}
+              aria-pressed={files().open}
+              onClick={files().onToggle}
+            >
+              <Icon name="folder" size={16} />
+            </button>
+          )}
+        </Show>
+        {props.sessionActions}
+        {/* The remote pill replaces the engine pill: "Connected" there is the local engine, not the
+            remote control connection the reader is watching. Without one, the engine status stays a
+            flat label: it never opens remote control, which lives in Settings. */}
+        {/* An agent waiting on a permission in another session makes no noise; this is the only
+            place the reader can notice it without opening every session. */}
+        <Show when={props.blockedElsewhere.length > 0}>
           <button
-            class="fc-nav-arrow"
-            classList={{ "fc-nav-arrow-active": props.openPanels.includes("terminal") }}
+            class="fc-status fc-status-waiting fc-status-blocked"
             type="button"
-            title={t("Terminal")}
-            aria-label={t("Terminal")}
-            aria-pressed={props.openPanels.includes("terminal")}
-            onClick={() => props.onTogglePanel("terminal")}
+            title={t("Another session is waiting for permission")}
+            onClick={() => props.onOpenBlocked(props.blockedElsewhere[0]!)}
           >
-            <Icon name="terminal" size={16} />
+            {t("{count} waiting", { count: props.blockedElsewhere.length })}
           </button>
         </Show>
         {/* Driving another computer: its name, always in sight, so this window is never taken for
@@ -209,21 +254,6 @@ export const Topbar: Component<TopbarProps> = (props) => {
             </button>
           )}
         </Show>
-        {/* The remote pill replaces the engine pill: "Connected" there is the local engine, not the
-            remote control connection the reader is watching. Without one, the engine status stays a
-            flat label: it never opens remote control, which lives in Settings. */}
-        {/* An agent waiting on a permission in another session makes no noise; this is the only
-            place the reader can notice it without opening every session. */}
-        <Show when={props.blockedElsewhere.length > 0}>
-          <button
-            class="fc-status fc-status-waiting fc-status-blocked"
-            type="button"
-            title={t("Another session is waiting for permission")}
-            onClick={() => props.onOpenBlocked(props.blockedElsewhere[0]!)}
-          >
-            {t("{count} waiting", { count: props.blockedElsewhere.length })}
-          </button>
-        </Show>
         <Show when={!props.remote && !props.hostRemote && props.showEngineStatus}>
           <span
             class="fc-status"
@@ -235,36 +265,6 @@ export const Topbar: Component<TopbarProps> = (props) => {
           >
             {status()}
           </span>
-        </Show>
-        <Show when={props.contextPanel}>
-          {(panel) => (
-            <button
-              class="fc-nav-arrow"
-              classList={{ "fc-nav-arrow-active": panel().open }}
-              type="button"
-              title={t("Session rail")}
-              aria-label={t("Session rail")}
-              aria-pressed={panel().open}
-              onClick={panel().onToggle}
-            >
-              <Icon name="list" size={16} />
-            </button>
-          )}
-        </Show>
-        <Show when={props.files}>
-          {(files) => (
-            <button
-              class="fc-nav-arrow"
-              classList={{ "fc-nav-arrow-active": files().open }}
-              type="button"
-              title={t("Files")}
-              aria-label={t("Files")}
-              aria-pressed={files().open}
-              onClick={files().onToggle}
-            >
-              <Icon name="folder" size={16} />
-            </button>
-          )}
         </Show>
       </div>
     </header>

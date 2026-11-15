@@ -28,14 +28,21 @@ const child = { ...session, id: "ses_child", parentID: "ses_tasks", title: "Anal
 /** `blockedChild` leaves the child waiting on a permission, which is work for the panel to watch. */
 async function openSession(
   page: Page,
-  options: { blockedChild?: boolean; idle?: boolean; tasks?: Array<{ content: string; status: string }> } = {},
+  options: {
+    blockedChild?: boolean
+    idle?: boolean
+    desktop?: boolean
+    tasks?: Array<{ content: string; status: string }>
+  } = {},
 ) {
-  await page.addInitScript(() => {
+  await page.addInitScript((desktop) => {
     window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
+    window.localStorage.setItem("flupcode.locale", JSON.stringify("en"))
+    if (desktop) window.flupcode = { ownsTitleBar: true, preview: {} }
     window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
     window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_tasks"))
     window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
-  })
+  }, options.desktop === true)
   await page.route("http://127.0.0.1:9097/**", (route) => {
     const url = new URL(route.request().url())
     if (url.pathname === "/harness/health") return route.fulfill({ json: { data: { healthy: true } } })
@@ -133,4 +140,33 @@ test("the session's tasks can be cleared, all at once or only the completed ones
 
   await aside.getByRole("button", { name: /Clear all tasks|Borrar todas las tareas/ }).click()
   await expect(tasks).toHaveCount(0)
+})
+
+test("the top-right buttons keep their order, and the connection closes the row", async ({ page }) => {
+  await openSession(page, { desktop: true })
+
+  const labels = await page.locator(".fc-topbar-right > *").evaluateAll((nodes) =>
+    nodes.map((node) => node.getAttribute("aria-label") ?? node.getAttribute("title") ?? node.textContent?.trim() ?? ""),
+  )
+  const at = (label: string) => labels.indexOf(label)
+  expect(at("Session rail")).toBeGreaterThanOrEqual(0)
+  expect(at("Session rail")).toBeLessThan(at("Terminal"))
+  expect(at("Terminal")).toBeLessThan(at("Files changed"))
+  expect(at("Files changed")).toBeLessThan(at("Agent browser"))
+  expect(at("Agent browser")).toBeLessThan(at("Preview"))
+  expect(at("Preview")).toBeLessThan(at("Menu"))
+  // The connection pill is the last thing in the row.
+  await expect(page.locator(".fc-topbar-right > :last-child")).toHaveClass(/fc-status/)
+})
+
+test("the rail reads at the size of the sidebar's navigation", async ({ page }) => {
+  await openSession(page, { tasks: [{ content: "Leer extractos", status: "completed" }] })
+  await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()
+  await expect(page.locator(".fc-rail-toggle").first()).toBeVisible()
+
+  const sizes = await page.evaluate(() => ({
+    rail: getComputedStyle(document.querySelector(".fc-rail-toggle")!).fontSize,
+    nav: getComputedStyle(document.querySelector(".fc-nav-item")!).fontSize,
+  }))
+  expect(sizes.rail).toBe(sizes.nav)
 })

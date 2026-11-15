@@ -5288,7 +5288,7 @@ button.fc-status {
   background: none;
   color: var(--fc-text);
   font: inherit;
-  font-size: var(--fc-text-base);
+  font-size: var(--fc-text-md);
   font-weight: 500;
   cursor: pointer;
 }
@@ -5337,7 +5337,7 @@ button.fc-status {
   align-items: center;
   gap: 10px;
   min-width: 0;
-  font-size: var(--fc-text-base);
+  font-size: var(--fc-text-md);
   line-height: 20px;
 }
 
