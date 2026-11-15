@@ -1,4 +1,5 @@
-import { Show, Suspense, lazy, type Component } from "solid-js"
+import { Show, createSignal, onMount, type Component } from "solid-js"
+import { Dynamic } from "solid-js/web"
 import { AppContext, type AppStores } from "./app-context"
 import { createConnection } from "./features/connection/store"
 import { createSettings } from "./features/settings/store"
@@ -29,9 +30,6 @@ import { WorkspacePanels } from "./components/WorkspacePanels"
  * before it hold: a memo or a resource reads its sources as soon as it exists. What a store reads
  * later, in an effect or a handler, can come from any of them.
  */
-// Only drawn while the reader has it open, so it stays out of the main chunk.
-const SessionRail = lazy(() => import("./features/workspace/SessionRail"))
-
 export const App: Component = () => {
   const app = {} as AppStores
   app.connection = createConnection(app)
@@ -44,6 +42,16 @@ export const App: Component = () => {
   app.workspace = createWorkspace(app)
   app.composer = createComposer(app)
   startShell(app)
+
+  // The rail is its own chunk so it stays out of the main one. It is loaded here, with no Suspense
+  // boundary: a boundary would also catch the resources the rail reads (tasks, memories,
+  // connectors, the working tree) and suspend the whole panel on every session switch until they
+  // answered — the empty column that lasted seconds. Loaded this way, the rail draws at once with
+  // what it already has and fills in as the reads arrive.
+  const [SessionRail, setSessionRail] = createSignal<Component>()
+  onMount(() => {
+    void import("./features/workspace/SessionRail").then((module) => setSessionRail(() => module.default))
+  })
 
   return (
     <AppContext.Provider value={app}>
@@ -161,9 +169,9 @@ export const App: Component = () => {
                   onResize={app.settings.updateContextWidth}
                   onHide={app.settings.toggleContextPanel}
                 >
-                  <Suspense>
-                    <SessionRail />
-                  </Suspense>
+                  <Show when={SessionRail()}>
+                    {(rail) => <Dynamic component={rail()} />}
+                  </Show>
                 </RightAside>
               </PanelBoundary>
             </Show>

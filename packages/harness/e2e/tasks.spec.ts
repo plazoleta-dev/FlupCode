@@ -32,6 +32,8 @@ async function openSession(
     blockedChild?: boolean
     idle?: boolean
     desktop?: boolean
+    /** Holds the task read for this many milliseconds, to watch the rail while it waits. */
+    delayTasks?: number
     tasks?: Array<{ content: string; status: string }>
   } = {},
 ) {
@@ -43,11 +45,14 @@ async function openSession(
     window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_tasks"))
     window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
   }, options.desktop === true)
-  await page.route("http://127.0.0.1:9097/**", (route) => {
+  await page.route("http://127.0.0.1:9097/**", async (route) => {
     const url = new URL(route.request().url())
     if (url.pathname === "/harness/health") return route.fulfill({ json: { data: { healthy: true } } })
     if (url.pathname === "/harness/events") return new Promise(() => {})
-    if (url.pathname === "/harness/tasks/ses_tasks") return route.fulfill({ json: { data: options.tasks ?? [] } })
+    if (url.pathname === "/harness/tasks/ses_tasks") {
+      if (options.delayTasks) await new Promise((resolve) => setTimeout(resolve, options.delayTasks))
+      return route.fulfill({ json: { data: options.tasks ?? [] } })
+    }
     return route.fulfill({ json: { data: [] } })
   })
   await page.route("http://127.0.0.1:9/**", (route) => {
@@ -169,4 +174,16 @@ test("the rail reads at the size of the sidebar's navigation", async ({ page }) 
     nav: getComputedStyle(document.querySelector(".fc-nav-item")!).fontSize,
   }))
   expect(sizes.rail).toBe(sizes.nav)
+})
+
+test("the rail draws while its data is still on the way", async ({ page }) => {
+  await openSession(page, {
+    tasks: [{ content: "Leer extractos", status: "completed" }],
+    delayTasks: 3_000,
+  })
+  await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()
+
+  // The rail is not held back by its own reads: the modules are there while the tasks still wait.
+  await expect(page.locator(".fc-rail-toggle").first()).toBeVisible({ timeout: 1_500 })
+  await expect(page.locator(".fc-aside-task")).toHaveText(["Leer extractos"], { timeout: 6_000 })
 })
