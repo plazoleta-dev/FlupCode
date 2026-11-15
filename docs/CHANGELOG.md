@@ -5,6 +5,15 @@ the website links to — are on
 [GitHub Releases](https://github.com/rldona/FlupCode/releases); this file keeps the same history in
 the repository, one section per version, oldest last.
 
+## 4.3.1
+
+- The session rail no longer goes blank when a session opens or is switched to: it draws at once with
+  what it has and fills in as its data arrives, instead of staying empty until the tasks, memories and
+  connectors answer (#582).
+- The rail reads at the same size as the sidebar's navigation, and the top bar's buttons run from the
+  session rail to the connection: rail, terminal, files changed, agent browser, preview, files, the
+  session menu and the connection last (#580).
+
 ## 4.3.0
 
 - The right-hand panel of a code session is now a **session rail**, opened from the list icon in the
