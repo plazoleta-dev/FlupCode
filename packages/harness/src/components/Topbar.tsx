@@ -34,6 +34,8 @@ type TopbarProps = {
   showEngineStatus: boolean
   /** The session's right-hand details panel, when a session is open. */
   contextPanel?: { open: boolean; onToggle: () => void }
+  /** The project's file tree, a screen of its own beside the session rail. */
+  files?: { open: boolean; onToggle: () => void }
   /**
    * The agent-browser panel toggle. Only the desktop app shows it: the live browser view it opens
    * is not operative in the browser build.
@@ -238,13 +240,29 @@ export const Topbar: Component<TopbarProps> = (props) => {
           {(panel) => (
             <button
               class="fc-nav-arrow"
+              classList={{ "fc-nav-arrow-active": panel().open }}
               type="button"
-              title={t("Toggle details panel")}
-              aria-label={t("Toggle details panel")}
+              title={t("Session rail")}
+              aria-label={t("Session rail")}
               aria-pressed={panel().open}
               onClick={panel().onToggle}
             >
-              <Icon name="context-panel" size={16} />
+              <Icon name="list" size={16} />
+            </button>
+          )}
+        </Show>
+        <Show when={props.files}>
+          {(files) => (
+            <button
+              class="fc-nav-arrow"
+              classList={{ "fc-nav-arrow-active": files().open }}
+              type="button"
+              title={t("Files")}
+              aria-label={t("Files")}
+              aria-pressed={files().open}
+              onClick={files().onToggle}
+            >
+              <Icon name="folder" size={16} />
             </button>
           )}
         </Show>

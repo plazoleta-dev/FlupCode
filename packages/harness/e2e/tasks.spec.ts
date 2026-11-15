@@ -101,7 +101,7 @@ test("the panel opens itself while there is work to watch", async ({ page }) => 
   await expect(page.locator(".fc-subagent")).toHaveCount(1)
 
   // A reader who closes it is not fought by the next render.
-  await page.getByRole("button", { name: /Toggle details panel|Alternar panel de detalles/ }).click()
+  await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()
   await expect(page.locator(".fc-rightaside")).toHaveCount(0)
   await page.waitForTimeout(300)
   await expect(page.locator(".fc-rightaside")).toHaveCount(0)
@@ -122,7 +122,7 @@ test("the session's tasks can be cleared, all at once or only the completed ones
     ],
   })
 
-  await page.getByRole("button", { name: /Toggle details panel|Alternar panel de detalles/ }).click()
+  await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()
 
   const aside = page.locator(".fc-rightaside")
   const tasks = aside.locator(".fc-aside-task")
@@ -132,5 +132,5 @@ test("the session's tasks can be cleared, all at once or only the completed ones
   await expect(tasks).toHaveText(["Cerrar fase 5"])
 
   await aside.getByRole("button", { name: /Clear all tasks|Borrar todas las tareas/ }).click()
-  await expect(aside.locator(".fc-aside-section", { hasText: /Tasks|Tareas/ })).toHaveCount(0)
+  await expect(tasks).toHaveCount(0)
 })

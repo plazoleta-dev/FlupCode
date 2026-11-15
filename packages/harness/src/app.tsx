@@ -21,6 +21,7 @@ import { Sidebar } from "./components/Sidebar"
 import { PanelBoundary } from "./components/PanelBoundary"
 import { RightAside } from "./components/RightAside"
 import { WorkspacePanels } from "./components/WorkspacePanels"
+import { SessionRail } from "./features/workspace/SessionRail"
 
 /**
  * The app: its stores, one per feature, and the shell the features are drawn in.
@@ -152,20 +153,14 @@ export const App: Component = () => {
               />
             </PanelBoundary>
             <Show when={app.settings.contextPanelShown()}>
-              <PanelBoundary name={t("The details panel")}>
+              <PanelBoundary name={t("The session rail")}>
                 <RightAside
-                  subagents={app.sessions.visibleSubagents()}
-                  onClearSubagents={app.sessions.clearSubagents}
-                  onOpenSubagent={app.sessions.selectSession}
-                  runningSubagents={Object.keys(app.sessions.runState()).filter((id) => app.sessions.runState()[id])}
-                  blockedSubagents={app.sessions.blockedSessions()}
-                  memories={app.sessions.memoriesUsed()}
-                  tasks={app.sessions.tasks()}
-                  onClearTasks={app.sessions.clearTasks}
                   width={app.settings.contextWidth()}
                   onResize={app.settings.updateContextWidth}
                   onHide={app.settings.toggleContextPanel}
-                />
+                >
+                  <SessionRail />
+                </RightAside>
               </PanelBoundary>
             </Show>
           </Show>

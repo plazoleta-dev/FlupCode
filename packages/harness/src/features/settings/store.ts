@@ -13,6 +13,7 @@ import { CONTEXT_PANEL_WIDTH } from "../../components/RightAside"
 import { WORKSPACE_WIDTH_DEFAULT } from "../../components/WorkspacePanels"
 import { desktopRemote, remote, touchDevice } from "../../remote"
 import { DESTINATIONS } from "../../navigation"
+import { RAIL_EXPANDED_DEFAULT, moveRailModule, readRailOrder, type RailModule } from "../../session-rail"
 import type { AppStores } from "../../app-context"
 
 // The FlupCode palette is the default, so anything unknown falls back to it. "default" was the
@@ -44,6 +45,12 @@ export function createSettings(app: AppStores) {
   const [contextWidth, setContextWidth] = createSignal(
     readStorage(STORAGE_KEYS.contextPanelWidth, CONTEXT_PANEL_WIDTH.default),
   )
+  const [railOrder, setRailOrder] = createSignal(readRailOrder(readStorage<unknown>(STORAGE_KEYS.railOrder, [])))
+  // Which rail modules are open; what the reader never toggled keeps its default.
+  const [railExpanded, setRailExpanded] = createSignal({
+    ...RAIL_EXPANDED_DEFAULT,
+    ...readStorage<Partial<Record<RailModule, boolean>>>(STORAGE_KEYS.railExpanded, {}),
+  })
   const [narrow, setNarrow] = createSignal(typeof window !== "undefined" && window.innerWidth < 768)
   // Phones controlling a computer get their own layout: a sessions home and a focused session screen.
   const mobileRemote = () => touchDevice && !desktopRemote() && !!remote.activeHost()
@@ -190,13 +197,10 @@ export function createSettings(app: AppStores) {
     openedForWork = false
   }
   /**
-   * What the panel has to show: this session's tasks and agents, or the memories it worked with.
-   * Without one of them the panel is an empty column taking room from the conversation, so this is
-   * also what keeps a stored "open" preference from bringing it back on a new chat.
+   * The rail always has the session's environment to show, so it is there for any open session; with
+   * none, a stored "open" preference does not bring an empty column back on a new chat.
    */
-  const contextPanelHasContent = () =>
-    app.sessions.visibleSubagents().length > 0 || app.sessions.tasks().length > 0 || app.sessions.memoriesUsed().length > 0
-  const contextPanelAvailable = () => !!app.sessions.selectedSession() && contextPanelHasContent()
+  const contextPanelAvailable = () => !!app.sessions.selectedSession()
   const contextPanelShown = () => contextPanelAvailable() && !contextHidden()
 
   /**
@@ -234,6 +238,18 @@ export function createSettings(app: AppStores) {
     const next = Math.max(CONTEXT_PANEL_WIDTH.min, Math.min(CONTEXT_PANEL_WIDTH.max, Math.round(width)))
     setContextWidth(next)
     writeStorage(STORAGE_KEYS.contextPanelWidth, next)
+  }
+
+  const moveRail = (id: RailModule, target: RailModule, place: "before" | "after") => {
+    const next = moveRailModule(railOrder(), id, target, place)
+    setRailOrder(next)
+    writeStorage(STORAGE_KEYS.railOrder, next)
+  }
+
+  const toggleRailModule = (id: RailModule) => {
+    const next = { ...railExpanded(), [id]: !railExpanded()[id] }
+    setRailExpanded(next)
+    writeStorage(STORAGE_KEYS.railExpanded, next)
   }
 
   const updateSidebarWidth = (width: number) => {
@@ -336,10 +352,13 @@ export function createSettings(app: AppStores) {
     keybinds,
     mcpAuthNoticeDismissed,
     mobileRemote,
+    moveRail,
     narrow,
     notifications,
     onboarded,
     panels,
+    railExpanded,
+    railOrder,
     sessionTabsEnabled,
     setCollapsed,
     setMcpAuthNoticeDismissed,
@@ -353,6 +372,7 @@ export function createSettings(app: AppStores) {
     toggleFavoriteModel,
     toggleNotifications,
     togglePanel,
+    toggleRailModule,
     toggleReasoning,
     toggleSessionTabs,
     toggleSidebar,
