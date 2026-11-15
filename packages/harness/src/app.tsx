@@ -1,4 +1,4 @@
-import { Show, Suspense, lazy, type Component } from "solid-js"
+import { Show, Suspense, lazy, onMount, type Component } from "solid-js"
 import { AppContext, type AppStores } from "./app-context"
 import { createConnection } from "./features/connection/store"
 import { createSettings } from "./features/settings/store"
@@ -21,6 +21,7 @@ import { Sidebar } from "./components/Sidebar"
 import { PanelBoundary } from "./components/PanelBoundary"
 import { RightAside } from "./components/RightAside"
 import { WorkspacePanels } from "./components/WorkspacePanels"
+import { Loader } from "./components/Loader"
 
 /**
  * The app: its stores, one per feature, and the shell the features are drawn in.
@@ -44,6 +45,15 @@ export const App: Component = () => {
   app.workspace = createWorkspace(app)
   app.composer = createComposer(app)
   startShell(app)
+
+  // The rail is its own chunk so it stays out of the main one. Fetching it while the app is idle
+  // means opening a session finds it ready, instead of a blank column while the request queues
+  // behind a run that is already using the connection.
+  onMount(() => {
+    const prefetch = () => void import("./features/workspace/SessionRail")
+    if (window.requestIdleCallback) window.requestIdleCallback(prefetch)
+    else window.setTimeout(prefetch, 1200)
+  })
 
   return (
     <AppContext.Provider value={app}>
@@ -161,7 +171,13 @@ export const App: Component = () => {
                   onResize={app.settings.updateContextWidth}
                   onHide={app.settings.toggleContextPanel}
                 >
-                  <Suspense>
+                  <Suspense
+                    fallback={
+                      <div class="fc-loading-center">
+                        <Loader label={t("Loading…")} />
+                      </div>
+                    }
+                  >
                     <SessionRail />
                   </Suspense>
                 </RightAside>
