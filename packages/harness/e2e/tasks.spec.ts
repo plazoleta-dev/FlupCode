@@ -162,6 +162,7 @@ test("the top-right buttons keep their order, and the connection closes the row"
 test("the rail reads at the size of the sidebar's navigation", async ({ page }) => {
   await openSession(page, { tasks: [{ content: "Leer extractos", status: "completed" }] })
   await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()
+  await expect(page.locator(".fc-rail-toggle").first()).toBeVisible()
 
   const sizes = await page.evaluate(() => ({
     rail: getComputedStyle(document.querySelector(".fc-rail-toggle")!).fontSize,
