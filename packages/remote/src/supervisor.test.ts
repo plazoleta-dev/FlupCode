@@ -118,8 +118,29 @@ describe("superviseChild", () => {
     expect(state.failure?.reason).toBe("exit")
     expect(state.failure?.message).toBe("exited with code 3")
     expect(state.failure?.lastLines.join("\n")).toContain(`Is port ${child.port} in use?`)
+    // The inline script is a multi-line argument: the "starting" note keeps it on one line, not the child's.
+    expect(state.failure?.lastLines.join("\n")).not.toContain("FAKE_FAIL_AT_START")
     expect(state.failure?.lastLines.join("\n")).not.toContain("sk-ant-aaaa")
     expect(existsSync(path.join(child.dir, "fake.pid"))).toBe(false)
+  })
+
+  test("a child that exits cleanly while starting says it never served, and that it printed nothing", async () => {
+    const supervisor = superviseChild({
+      name: "quiet",
+      command: process.execPath,
+      args: ["-e", "process.exit(0)"],
+      dir: await temp(),
+      ready: async () => false,
+    })
+    supervisors.push(supervisor)
+    const state = await supervisor.start()
+    expect(state.phase).toBe("failed")
+    expect(state.restarts).toBe(0)
+    expect(state.failure?.reason).toBe("exit")
+    expect(state.failure?.message).toMatch(
+      /^exited with code 0 \d+\.\d s after it started, before it answered: .+ ran to its end without serving, and printed nothing$/,
+    )
+    expect(state.failure?.lastLines).toEqual([])
   })
 
   test("a child that never answers fails with the time it was given", async () => {

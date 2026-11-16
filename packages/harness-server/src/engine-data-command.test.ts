@@ -9,7 +9,7 @@ afterEach(() => folders.splice(0).forEach((folder) => rmSync(folder, { recursive
 
 /** The binary as the desktop runs it, with its data folder in a temporary place. */
 async function harness(data: string, ...args: string[]) {
-  const child = Bun.spawn(["bun", join(import.meta.dir, "index.ts"), "engine-data", ...args], {
+  const child = Bun.spawn(["bun", join(import.meta.dir, "main.ts"), "engine-data", ...args], {
     env: { ...process.env, XDG_DATA_HOME: data },
     stdout: "pipe",
     stderr: "pipe",

@@ -738,10 +738,14 @@ const createVaultKey = (): string | undefined => {
   }
 }
 
-// The desktop's explicit 1.x import runs through this binary and exits; it never starts the server.
-if (import.meta.main && process.argv[2] === "engine-data") process.exit(runEngineDataCommand(process.argv.slice(3)))
-
-if (import.meta.main) {
+/**
+ * The server binary's entry, called by `src/main.ts` alone. It is not behind `import.meta.main`:
+ * that is always false in a `bun build --compile` executable on Windows (oven-sh/bun#48689), so the
+ * Windows server exited at once with code 0 and never listened. Importing this module stays inert.
+ */
+export function main(argv: string[]) {
+  // The desktop's explicit 1.x import runs through this binary and exits; it never starts the server.
+  if (argv[0] === "engine-data") process.exit(runEngineDataCommand(argv.slice(1)))
   // Only here, and not in `createHarnessServer`: a test that builds a server would otherwise write
   // template files into whatever home directory it is running in. That is how fixtures ended up in
   // somebody's real routines once already.

@@ -29,8 +29,8 @@ export function resolveHarnessServer(input: {
   if (env.FLUPCODE_HARNESS_SERVER) return { command: env.FLUPCODE_HARNESS_SERVER, args: [] }
   const binary = input.binaries.find((file) => existsSync(file))
   if (binary) return { command: binary, args: [] }
-  if (!existsSync(join(input.checkout, "src", "index.ts"))) return undefined
-  return { command: env.FLUPCODE_BUN ?? input.bun ?? "bun", args: ["run", "./src/index.ts"], cwd: input.checkout }
+  if (!existsSync(join(input.checkout, "src", "main.ts"))) return undefined
+  return { command: env.FLUPCODE_BUN ?? input.bun ?? "bun", args: ["run", "./src/main.ts"], cwd: input.checkout }
 }
 
 /**

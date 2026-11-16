@@ -178,6 +178,13 @@ jobs:
             cp "packages/harness-server/dist/$target/flupcode-harness$extension" "cli/flupcode-harness-$target$extension"
           done
 
+      # The runner runs the linux-x64 binaries: the harness must serve and the CLI must start, or the
+      # release would ship binaries that only exist (4.3.1's Windows harness exited with code 0).
+      - name: Smoke-test the linux-x64 binaries
+        run: |
+          bun packages/harness-server/script/smoke.ts cli/flupcode-harness-linux-x64
+          cli/flupcode-linux-x64 --version
+
       - name: Publish CLI binaries
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -216,6 +223,13 @@ jobs:
       # browser check in `dist` aborts the release (lesson of 1.8.0 is now enforced).
       - name: Fetch Chromium for the harness browser
         run: bun run --cwd packages/harness-desktop fetch-browser
+
+      # The packaging check only asks that the server binary exists: 4.3.1 shipped a Windows server
+      # that exited with code 0 without listening. This one has to answer its health check first.
+      - name: Smoke-test the harness server
+        run: |
+          bun run --cwd packages/harness-server build
+          bun packages/harness-server/script/smoke.ts
 
       - name: Package desktop
         run: bun run --cwd packages/harness-desktop dist

@@ -180,6 +180,39 @@ jobs:
           (cd packages/harness && bun test src/engine --timeout 60000)
           (cd packages/harness-server && bun test src/engine-config.engine.test.ts src/runner.engine.test.ts src/project-roots.engine.test.ts src/usage-attribution.engine.test.ts src/usage-ledger.engine.test.ts src/usage-reconciler.engine.test.ts src/artifact-lineage.engine.test.ts src/browser-attach.engine.test.ts src/browser-bridge.engine.test.ts src/browser-preview.engine.test.ts --timeout 120000)
 
+  # The compiled harness server has to start and answer, not only exist: 4.3.1's Windows server exited
+  # with code 0 without listening (oven-sh/bun#48689). One binary per runner, for the runner's own
+  # architecture. No macOS here: its hosted pool can sit in the queue for good, and `gate` would wait
+  # on it; the release's `desktop` job runs the same check on macOS before packaging.
+  harness-binary:
+    needs: changes
+    if: needs.changes.outputs.harness == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Compile and smoke-test the harness server
+        run: |
+          bun packages/harness-server/script/build.ts "$(bun -e 'console.log(process.arch)')"
+          bun packages/harness-server/script/smoke.ts
+
   # oxlint over the whole repository: errors fail, warnings are reported. Cheap, so it runs on every
   # change rather than behind `changes`.
   lint:
@@ -203,7 +236,7 @@ jobs:
   # The one required check on `main`. A job skipped because its paths did not change is a pass; a
   # failed or cancelled one, or a `changes` or `lint` job that did not pass, is not.
   gate:
-    needs: [changes, lint, build, engine]
+    needs: [changes, lint, build, engine, harness-binary]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 2
@@ -214,10 +247,11 @@ jobs:
           LINT: ${{ needs.lint.result }}
           BUILD: ${{ needs.build.result }}
           ENGINE: ${{ needs.engine.result }}
+          HARNESS_BINARY: ${{ needs.harness-binary.result }}
         run: |
-          echo "changes=$CHANGES lint=$LINT build=$BUILD engine=$ENGINE"
+          echo "changes=$CHANGES lint=$LINT build=$BUILD engine=$ENGINE harness-binary=$HARNESS_BINARY"
           [ "$CHANGES" = success ] || exit 1
           [ "$LINT" = success ] || exit 1
-          for result in "$BUILD" "$ENGINE"; do
+          for result in "$BUILD" "$ENGINE" "$HARNESS_BINARY"; do
             case "$result" in success|skipped) ;; *) exit 1 ;; esac
           done

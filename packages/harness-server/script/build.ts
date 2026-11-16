@@ -32,7 +32,7 @@ for (const arch of archs) {
   const outfile = path.join(directory, "dist", arch, "flupcode-harness")
   const target = (arch.includes("-") ? `bun-${arch}` : `bun-${os}-${arch}`) as Bun.Build.CompileTarget
   const result = await Bun.build({
-    entrypoints: [path.join(directory, "src", "index.ts")],
+    entrypoints: [path.join(directory, "src", "main.ts")],
     compile: { outfile, target },
     external: ["chromium-bidi"],
     plugins: [

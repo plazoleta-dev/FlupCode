@@ -1,5 +1,5 @@
 /**
- * What the server is built from (PI-03): the modules reachable from `src/index.ts`, the entry the
+ * What the server is built from (PI-03): the modules reachable from `src/main.ts`, the entry the
  * server binary is compiled from. The adaptive layer's offline evaluation tools live in the dev-only
  * `@flupcode/adaptive-eval` package and must never be pulled into it, directly or through another
  * workspace package; and every adaptive decision kind it declares, it also asks.
@@ -42,7 +42,7 @@ test("every decision kind is asked by the server", () => {
 /** Every workspace source file reachable from the server entry; third-party packages are not walked. */
 function serverModules() {
   const seen = new Set<string>()
-  const pending = [path.join(packages, "harness-server/src/index.ts")]
+  const pending = [path.join(packages, "harness-server/src/main.ts")]
   while (pending.length > 0) {
     const file = pending.pop()!
     if (seen.has(file)) continue
