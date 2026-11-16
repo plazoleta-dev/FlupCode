@@ -93,6 +93,7 @@ export function superviseChild(input: SupervisorInput) {
   /** One child, started and waited on until it answers: nothing when it does, else why it did not. */
   async function launch(): Promise<ChildFailure | undefined> {
     log.note(`starting: ${[input.command, ...input.args].join(" ")}`)
+    const startedAt = Date.now()
     const started = spawn(input.command, input.args, { ...input.options, stdio: ["ignore", "pipe", "pipe"] })
     child = started
     const exited = new Promise<Exit>((resolve) => {
@@ -123,7 +124,7 @@ export function superviseChild(input: SupervisorInput) {
     }
     child = undefined
     rmSync(pidFile, { force: true })
-    if ("exit" in outcome) return failureOf(outcome.exit, log)
+    if ("exit" in outcome) return failureOf(outcome.exit, log, { after: Date.now() - startedAt, command: input.command })
     // Alive but never answering: it is stopped, so a later attempt does not find the port taken.
     started.kill("SIGKILL")
     return {
@@ -288,9 +289,25 @@ function readTail(file: string, bytes: number) {
 
 type Exit = { code: number | null; signal: string | null; error?: string }
 
-function failureOf(exit: Exit, log: ReturnType<typeof openLog>): ChildFailure {
+/** `beforeReady` when it stopped during a start, before it ever answered. */
+function failureOf(
+  exit: Exit,
+  log: ReturnType<typeof openLog>,
+  beforeReady?: { after: number; command: string },
+): ChildFailure {
   const lastLines = log.tail(20).filter((line) => !line.startsWith("[flupcode "))
   if (exit.error) return { reason: "spawn", message: `could not be started: ${exit.error}`, lastLines }
+  // A clean exit while starting is no crash: the program ran to its end without serving, which a
+  // restart would only repeat. 4.3.1's Windows harness did that silently (oven-sh/bun#48689), and
+  // "exited with code 0" alone read like nothing was wrong.
+  if (beforeReady && exit.code === 0)
+    return {
+      reason: "exit",
+      message:
+        `exited with code 0 ${(beforeReady.after / 1000).toFixed(1)} s after it started, before it answered: ` +
+        `${beforeReady.command} ran to its end without serving${lastLines.length ? "" : ", and printed nothing"}`,
+      lastLines,
+    }
   return {
     reason: "exit",
     message: exit.signal ? `was stopped by ${exit.signal}` : `exited with code ${exit.code}`,

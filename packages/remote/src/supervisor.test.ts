@@ -122,6 +122,27 @@ describe("superviseChild", () => {
     expect(existsSync(path.join(child.dir, "fake.pid"))).toBe(false)
   })
 
+  test("a child that exits cleanly while starting says it never served, and that it printed nothing", async () => {
+    // One line of source: the supervisor's own "starting" note names the command, and a multi-line
+    // script would read as the child's output.
+    const supervisor = superviseChild({
+      name: "quiet",
+      command: process.execPath,
+      args: ["-e", "process.exit(0)"],
+      dir: await temp(),
+      ready: async () => false,
+    })
+    supervisors.push(supervisor)
+    const state = await supervisor.start()
+    expect(state.phase).toBe("failed")
+    expect(state.restarts).toBe(0)
+    expect(state.failure?.reason).toBe("exit")
+    expect(state.failure?.message).toMatch(
+      /^exited with code 0 \d+\.\d s after it started, before it answered: .+ ran to its end without serving, and printed nothing$/,
+    )
+    expect(state.failure?.lastLines).toEqual([])
+  })
+
   test("a child that never answers fails with the time it was given", async () => {
     const child = await fakeChild({ env: { FAKE_SILENT: "1" }, readyTimeout: 600 })
     const state = await child.supervisor.start()
