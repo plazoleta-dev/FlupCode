@@ -11,11 +11,11 @@ describe("the harness a host starts (HE-01)", () => {
   test("is the named one, then a compiled binary, then a checkout's source", () => {
     const checkout = join(root, "harness-server")
     mkdirSync(join(checkout, "src"), { recursive: true })
-    writeFileSync(join(checkout, "src", "index.ts"), "")
+    writeFileSync(join(checkout, "src", "main.ts"), "")
     const binary = join(root, "flupcode-harness")
     expect(resolveHarnessServer({ binaries: [binary], checkout, bun: "/bin/bun", env: {} })).toEqual({
       command: "/bin/bun",
-      args: ["run", "./src/index.ts"],
+      args: ["run", "./src/main.ts"],
       cwd: checkout,
     })
     writeFileSync(binary, "")
