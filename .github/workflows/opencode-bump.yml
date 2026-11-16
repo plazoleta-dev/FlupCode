@@ -72,7 +72,9 @@ jobs:
           git config user.email "bot@users.noreply.github.com"
           git switch -C opencode-bump
           git commit -am "chore(opencode): pin OpenCode $VERSION"
-          git push --force origin opencode-bump
+          # --no-verify skips the husky pre-push hook: it checks Node against .nvmrc (the runner's
+          # is older) and runs `bun typecheck`, both of which the pull request's `gate` covers.
+          git push --force --no-verify origin opencode-bump
           body="Moves the pinned OpenCode 2 (binary and \`@opencode/client\`) to $VERSION, its newest release older than \`minimumReleaseAge\`.
 
           Upstream changes: https://github.com/anomalyco/opencode/compare/v$FROM...v$VERSION
