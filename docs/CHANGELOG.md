@@ -5,6 +5,17 @@ the website links to — are on
 [GitHub Releases](https://github.com/rldona/FlupCode/releases); this file keeps the same history in
 the repository, one section per version, oldest last.
 
+## 4.3.2
+
+- The desktop app starts its harness on Windows again. In 4.3.1 the Windows harness server exited at
+  once without serving, so Runs, Workflows, Routines and Artifacts were unavailable and the app showed
+  "harness: failed, exited with code 0" (#584).
+- When the harness or the engine stops on its own while starting, the dialog and Copy Diagnostics say
+  how long it ran, which program it was and whether it printed anything, instead of only "exited with
+  code 0" (#584).
+- Every release now starts the compiled harness on each platform and checks that it answers before
+  packaging it (#584).
+
 ## 4.3.1
 
 - The session rail no longer goes blank when a session opens or is switched to: it draws at once with
