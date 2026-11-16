@@ -266,8 +266,11 @@ export function openLog(file: string, input: { maxBytes?: number; keep?: number 
   return {
     file,
     write,
-    /** A line from the supervisor itself, told apart from the child's own output. */
-    note: (message: string) => write(`[flupcode ${new Date().toISOString()}] ${message}\n`),
+    /**
+     * A line from the supervisor itself, told apart from the child's own output by its prefix. Always
+     * one line: a multi-line argument in the "starting" note would otherwise read as the child's output.
+     */
+    note: (message: string) => write(`[flupcode ${new Date().toISOString()}] ${message.replace(/\r?\n/g, "\\n")}\n`),
     tail: (lines: number) => tailLog(file, lines).map(sweep),
   }
 }
