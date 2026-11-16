@@ -14,7 +14,7 @@ import { withEnginePlugins } from "./engine-plugins"
  * checked against the sha512 pinned below for it, and unpacked under FlupCode's cache.
  * Node and Bun both run this module: the desktop's main process is Electron.
  */
-export const OPENCODE_V2_VERSION = "2.0.18"
+export const OPENCODE_V2_VERSION = "2.3.0"
 
 /**
  * The npm `dist.integrity` of each platform package of the pinned version (HE-05). The tarball is
@@ -24,14 +24,14 @@ export const OPENCODE_V2_VERSION = "2.0.18"
  * disagree with the registry.
  */
 export const OPENCODE_V2_INTEGRITY: Record<string, string> = {
-  "darwin-arm64": "sha512-GRJMkkyQKDPIJbYr2WtFTgK1Vb1p/4xrqxgXA/TLyJ1Tn5tK5hNOtbslUZgsktrEQD6TeT5bVZcjRLC41n+d/A==",
-  "darwin-x64": "sha512-w6TKuEob/XM+KzSZmmNL69P1DMvHN4LEfE9NfMwdUj5wPLXDqzz1yLOhAYEnFYW1LBAsV5Xo1giyvtpWz5vyzg==",
-  "linux-arm64": "sha512-OjKG0staG+KRG9sNORb2vIPcfthMVk9RtCamU1vMWPquV70bQEYUM0JUT+t0A49eAc2H4lZWhqkpH2gpg87D+Q==",
-  "linux-arm64-musl": "sha512-CbXZDRMMrzTyGH259prvFHbHluyMRI8yoJiTYiWme9WI5sTr1N36elOR4+/DJrwYlbnCQPzp89HS/5iuLns4Jw==",
-  "linux-x64": "sha512-94dH7lwB+tpmzI1/NIfzFxLBIeshZSNtyx2sskL0C0kgYjMaiVMIHvQLYIECUOWSuVz5/dH/KPUIOGn7ML311g==",
-  "linux-x64-musl": "sha512-PQzxDlkIEotzbSE4PCozr50ysgI+teS2tgkBOkh4Mrn+d74F/o7CvPYMpG1wViAFdwgotpFPCFbyu1GmZboifA==",
-  "windows-arm64": "sha512-/ulfVQQO3Dait6USMo9rIQg6rjIK0T1NMoTKCmk1wPb6eh1PHTSvvMCm/hHYTcFJyHXWsGAYp/lpAONs90of+g==",
-  "windows-x64": "sha512-QsyGVmjJcHeuaS9bTVu4iiNyZzYfnRmia0BZop9AJ6QWRPDSq17ak1XRBTGGwh6msM+Ed0y+hke3s+lT3/kD+A==",
+  "darwin-arm64": "sha512-ey2HOWX2DK2YJrKta5a+pcvIlkiCyJJsN7NjkJZPsVg9TDXpQWE1OJLWVFqjxZcWNtaMjvKYlrlCY6g8Z2Lb+A==",
+  "darwin-x64": "sha512-OARYGefjQb1xClR9lX0bTl/unxaJ2H9kpyqYuEH+59YdgantqpMdPrXXnJgwiydk3WP94CxWLXFOxSYtCxoDQQ==",
+  "linux-arm64": "sha512-1IF1NQFD5mdZ7NcU81UifdYAVKEDAP/J07ylbgE4ZATminS7pOn5SOXVzyOkuN1WLcDzXunkju0hw8hug48wTg==",
+  "linux-arm64-musl": "sha512-RJHOnYFNVLKg5ZVPDUBJI6noq+wkAg0+Ofndeirl/2TBmXq6qm8PF3nMkmCs4zCfwlZuzk1eiDBMgEyStY9wPA==",
+  "linux-x64": "sha512-8T3K8L6Nd4fSG5BSgofqhmIDQ1ZvzDZZ2J7bFVB9RK1d5Hjqh24IcxgbcwpgGKkdvItrayi4Rl+wrSmhl17FFg==",
+  "linux-x64-musl": "sha512-wi9aSJOMaKgifrF4cyoE2hqIG26VtUhMvI1AFKbjItID16pcEpE0zZ2bGvL1Yb+1WgTeemWQLea/sNculu7v7A==",
+  "windows-arm64": "sha512-dqOtQicdmaKxyA8fSBYysegVl0QrlHYWXy/D/ocgZvGa0bNGi+9KR6N1Za9BCkOu/q7gemroXliMS+aBREhShA==",
+  "windows-x64": "sha512-0wnPu8aCczjN82X6qK+XmMFiheyvOnBXRsb+hkyTWaeG6WlIeN9cM6J7vKnj741juyIE7q57SmRSRVPWUmun/g==",
 }
 
 const REGISTRY = "https://registry.npmjs.org"

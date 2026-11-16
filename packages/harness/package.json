@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@flupcode/remote": "workspace:*",
-    "@opencode/client": "2.0.18",
+    "@opencode/client": "2.3.0",
     "@shikijs/stream": "catalog:",
     "@xterm/addon-fit": "0.11.0",
     "@xterm/xterm": "6.0.0",
