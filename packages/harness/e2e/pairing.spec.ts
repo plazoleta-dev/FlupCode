@@ -35,7 +35,7 @@ test.beforeAll(async () => {
   const env = Object.fromEntries(
     Object.entries(process.env).filter(([name]) => !name.startsWith("FLUPCODE_") && !name.startsWith("XDG_")),
   )
-  harness = spawn("bun", ["run", "./src/index.ts"], {
+  harness = spawn("bun", ["run", "./src/main.ts"], {
     cwd: fileURLToPath(new URL("../../harness-server", import.meta.url)),
     env: {
       ...env,
