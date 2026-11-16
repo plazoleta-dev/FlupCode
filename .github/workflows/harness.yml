@@ -180,16 +180,17 @@ jobs:
           (cd packages/harness && bun test src/engine --timeout 60000)
           (cd packages/harness-server && bun test src/engine-config.engine.test.ts src/runner.engine.test.ts src/project-roots.engine.test.ts src/usage-attribution.engine.test.ts src/usage-ledger.engine.test.ts src/usage-reconciler.engine.test.ts src/artifact-lineage.engine.test.ts src/browser-attach.engine.test.ts src/browser-bridge.engine.test.ts src/browser-preview.engine.test.ts --timeout 120000)
 
-  # The compiled harness server has to start and answer on each OS the desktop ships, not only exist:
-  # 4.3.1's Windows server exited with code 0 without listening (oven-sh/bun#48689). One binary per
-  # runner, for the runner's own architecture.
+  # The compiled harness server has to start and answer, not only exist: 4.3.1's Windows server exited
+  # with code 0 without listening (oven-sh/bun#48689). One binary per runner, for the runner's own
+  # architecture. No macOS here: its hosted pool can sit in the queue for good, and `gate` would wait
+  # on it; the release's `desktop` job runs the same check on macOS before packaging.
   harness-binary:
     needs: changes
     if: needs.changes.outputs.harness == 'true'
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15, windows-latest]
+        os: [ubuntu-24.04, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     defaults:
