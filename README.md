@@ -8,16 +8,16 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/rldona/FlupCode/actions/workflows/harness.yml"><img alt="build" src="https://img.shields.io/github/actions/workflow/status/rldona/FlupCode/harness.yml?branch=main&label=build" /></a>
-  <a href="https://github.com/rldona/FlupCode/releases"><img alt="release" src="https://img.shields.io/github/v/release/rldona/FlupCode?label=release" /></a>
-  <a href="https://github.com/rldona/FlupCode/blob/main/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rldona/FlupCode?label=license" /></a>
+  <a href="https://github.com/plazoleta-dev/FlupCode/actions/workflows/harness.yml"><img alt="build" src="https://img.shields.io/github/actions/workflow/status/plazoleta-dev/FlupCode/harness.yml?branch=main&label=build" /></a>
+  <a href="https://github.com/plazoleta-dev/FlupCode/releases"><img alt="release" src="https://img.shields.io/github/v/release/plazoleta-dev/FlupCode?label=release" /></a>
+  <a href="https://github.com/plazoleta-dev/FlupCode/blob/main/LICENSE"><img alt="license" src="https://img.shields.io/github/license/plazoleta-dev/FlupCode?label=license" /></a>
   <a href="https://flupcode.com"><img alt="website" src="https://img.shields.io/badge/website-flupcode.com-9aa84f" /></a>
 </p>
 
 <p align="center">
   <img alt="platforms" src="https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey" />
-  <a href="https://github.com/rldona/FlupCode/stargazers"><img alt="stars" src="https://img.shields.io/github/stars/rldona/FlupCode" /></a>
-  <a href="https://github.com/rldona/FlupCode/issues"><img alt="issues" src="https://img.shields.io/github/issues/rldona/FlupCode" /></a>
+  <a href="https://github.com/plazoleta-dev/FlupCode/stargazers"><img alt="stars" src="https://img.shields.io/github/stars/plazoleta-dev/FlupCode" /></a>
+  <a href="https://github.com/plazoleta-dev/FlupCode/issues"><img alt="issues" src="https://img.shields.io/github/issues/plazoleta-dev/FlupCode" /></a>
   <img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen" />
   <img alt="built on OpenCode 2" src="https://img.shields.io/badge/built%20on-OpenCode%202-blueviolet" />
 </p>
@@ -36,7 +36,7 @@
 - [Documentation](#documentation)
 - [License](#license)
 
-🌐 **Website:** [flupcode.com](https://flupcode.com) · 🖥️ **Web app:** [app.flupcode.com](https://app.flupcode.com) · 💻 **Source:** [rldona/FlupCode](https://github.com/rldona/FlupCode) · ⬇️ **[Download](https://github.com/rldona/FlupCode/releases/latest)**
+🌐 **Website:** [flupcode.com](https://flupcode.com) · 🖥️ **Web app:** [app.flupcode.com](https://app.flupcode.com) · 💻 **Source:** [plazoleta-dev/FlupCode](https://github.com/plazoleta-dev/FlupCode) · ⬇️ **[Download](https://github.com/plazoleta-dev/FlupCode/releases/latest)**
 
 FlupCode is built on [OpenCode](https://github.com/anomalyco/opencode): it takes its
 terminal-grade feature set and packages it into a first-class **web and desktop experience**:
@@ -88,7 +88,7 @@ This repository started as a fork of OpenCode and no longer carries its source (
 
 ## Status
 
-**3.0.x** (see [Releases](https://github.com/rldona/FlupCode/releases)). The web harness (Claude Code–style shell, TUI parity, dashboard, i18n), the Electron
+**3.0.x** (see [Releases](https://github.com/plazoleta-dev/FlupCode/releases)). The web harness (Claude Code–style shell, TUI parity, dashboard, i18n), the Electron
 desktop app and remote control (relay at `relay.flupcode.com`, phone view, `flupcode remote`) are
 released, along with the harness server that owns runs: tasks, routines with history, verification
 with evidence, workflows with human gates, and artifacts — now including the **documents the agent
@@ -118,7 +118,7 @@ docs/                         # project documentation
 ## Install
 
 Download the desktop app and the `flupcode` CLI from the
-[latest release](https://github.com/rldona/FlupCode/releases/latest):
+[latest release](https://github.com/plazoleta-dev/FlupCode/releases/latest):
 
 | Platform | Desktop app | CLI |
 | --- | --- | --- |

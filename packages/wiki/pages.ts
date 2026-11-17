@@ -33,4 +33,4 @@ export const groups = [
 
 export const pages = groups.flatMap((group) => group.pages)
 
-export const DOCS_ON_GITHUB = "https://github.com/rldona/FlupCode/blob/main/docs"
+export const DOCS_ON_GITHUB = "https://github.com/plazoleta-dev/FlupCode/blob/main/docs"

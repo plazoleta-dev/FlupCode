@@ -6,7 +6,7 @@ import electronUpdater from "electron-updater"
 
 const { autoUpdater } = electronUpdater
 
-const RELEASES_URL = "https://github.com/rldona/FlupCode/releases/latest"
+const RELEASES_URL = "https://github.com/plazoleta-dev/FlupCode/releases/latest"
 
 let manual = false
 let started = false

@@ -2,7 +2,7 @@
 
 What a reader of FlupCode gets, version by version. The published notes of each release — the page
 the website links to — are on
-[GitHub Releases](https://github.com/rldona/FlupCode/releases); this file keeps the same history in
+[GitHub Releases](https://github.com/plazoleta-dev/FlupCode/releases); this file keeps the same history in
 the repository, one section per version, oldest last.
 
 ## 4.3.2

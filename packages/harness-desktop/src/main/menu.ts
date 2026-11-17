@@ -76,7 +76,7 @@ export function setApplicationMenu(handlers: MenuHandlers) {
         { type: "separator" },
         {
           label: "FlupCode on GitHub",
-          click: () => void shell.openExternal("https://github.com/rldona/FlupCode"),
+          click: () => void shell.openExternal("https://github.com/plazoleta-dev/FlupCode"),
         },
         {
           label: "Upstream OpenCode",
