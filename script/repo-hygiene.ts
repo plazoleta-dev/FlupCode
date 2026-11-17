@@ -12,15 +12,34 @@
 const PATTERN = "isobaria|jornia|plazoleta|lovercast|carmela|/Users/raul"
 const EXCLUDES = ["script/repo-hygiene.ts", ".github/workflows/repo-hygiene.yml"]
 
+/**
+ * The repository itself lives in the `plazoleta-dev` organization, so its own address contains one
+ * of the patterns. These exact forms are the repository's identity, not private content: they are
+ * removed from each matching line before it is judged, so a line that also says something private
+ * still fails.
+ */
+const ALLOWED = [/plazoleta-dev\/FlupCode/gi, /"owner": "plazoleta-dev"/g]
+const PRIVATE = new RegExp(PATTERN, "i")
+
 const result = Bun.spawnSync(
   ["git", "grep", "-I", "-n", "-i", "-E", PATTERN, "--", ".", ...EXCLUDES.map((path) => `:(exclude)${path}`)],
   { stdout: "pipe", stderr: "pipe" },
 )
 
-const output = result.stdout.toString().trim()
+const output = result.stdout
+  .toString()
+  .split("\n")
+  .filter((line) => {
+    // `git grep -n` prints `path:line:content`; only the content is judged.
+    const content = line.replace(/^[^:]*:\d+:/, "")
+    return PRIVATE.test(ALLOWED.reduce((rest, allowed) => rest.replace(allowed, ""), content))
+  })
+  .join("\n")
+  .trim()
 
-// `git grep` exits 1 when nothing matches, which is the healthy case.
-if (result.exitCode === 1 && !output) {
+// `git grep` exits 1 when nothing matches, and 0 when every match was an allowed address: both are
+// the healthy case.
+if ((result.exitCode === 0 || result.exitCode === 1) && !output) {
   console.log("repo-hygiene: ok, no private references in tracked files")
   process.exit(0)
 }
