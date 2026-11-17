@@ -98,7 +98,7 @@ The installers do **not** bundle the OpenCode engine. Install the
 elsewhere. Without an engine the app opens an install prompt instead of a session.
 
 Download `FlupCode-mac-arm64.dmg` (Apple Silicon), `FlupCode-mac-x64.dmg`, `FlupCode-win-x64.exe` or
-`FlupCode-linux-x64.AppImage` from the [latest release](https://github.com/rldona/FlupCode/releases/latest).
+`FlupCode-linux-x64.AppImage` from the [latest release](https://github.com/plazoleta-dev/FlupCode/releases/latest).
 The app checks for updates on start and every 6 hours, downloads them and offers **Restart now**
 (or installs on quit). On macOS, while builds are unsigned, FlupCode replaces its own bundle after
 quitting (Squirrel.Mac rejects unsigned updates); it needs the app in a folder you can write to,
@@ -641,7 +641,7 @@ A checkpoint is per folder, so the branch view does not show any.
 Above the composer, a chip says where the branch stands:
 
 ```
-feature/thing  rldona/FlupCode              [ Push and create PR ]
+feature/thing  plazoleta-dev/FlupCode              [ Push and create PR ]
 #121  feature/thing   +835 −25              ● CI 3/5
 #121  feature/thing   +835 −25              Merged
 ```
@@ -801,13 +801,13 @@ keeps paired computers.
 
 Without the desktop app — on a headless machine, over SSH, or if you live in the terminal — host
 remote control with `flupcode remote` (like `claude remote-control`). Install the binary for your
-platform from the [latest release](https://github.com/rldona/FlupCode/releases/latest)
+platform from the [latest release](https://github.com/plazoleta-dev/FlupCode/releases/latest)
 (`flupcode-darwin-arm64`, `-darwin-x64`, `-linux-x64`, `-linux-arm64`, `-windows-x64.exe`). On a Mac
 with Apple Silicon, into a directory on your `PATH`:
 
 ```bash
 mkdir -p ~/.local/bin
-curl -fL -o ~/.local/bin/flupcode https://github.com/rldona/FlupCode/releases/latest/download/flupcode-darwin-arm64
+curl -fL -o ~/.local/bin/flupcode https://github.com/plazoleta-dev/FlupCode/releases/latest/download/flupcode-darwin-arm64
 chmod +x ~/.local/bin/flupcode
 flupcode remote
 ```

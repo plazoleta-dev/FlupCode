@@ -31,7 +31,7 @@ export const About: Component<AboutProps> = (props) => {
         )}
       </p>
       <div class="fc-modal-links">
-        <a href="https://github.com/rldona/FlupCode" target="_blank" rel="noreferrer">
+        <a href="https://github.com/plazoleta-dev/FlupCode" target="_blank" rel="noreferrer">
           {t("Repository")}
         </a>
         <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noreferrer">

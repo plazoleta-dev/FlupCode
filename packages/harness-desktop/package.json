@@ -56,7 +56,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "rldona",
+        "owner": "plazoleta-dev",
         "repo": "FlupCode"
       }
     ],

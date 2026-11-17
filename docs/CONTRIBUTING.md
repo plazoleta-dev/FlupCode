@@ -123,7 +123,7 @@ Merges happen on GitHub, never from Vercel, and one PR at a time:
 3. **Merge with rebase**, so each conventional commit lands on `main` as written:
 
    ```bash
-   gh pr merge <number> --rebase --repo rldona/FlupCode
+   gh pr merge <number> --rebase --repo plazoleta-dev/FlupCode
    ```
 
 4. **Several PRs:** merge them in order, infrastructure and CI changes first. After each merge,

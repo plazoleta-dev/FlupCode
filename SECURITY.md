@@ -37,6 +37,6 @@ engine, which runs locally on your machine and gives an agent shell, file and we
 ## Reporting a vulnerability
 
 Please report security issues privately through GitHub's
-[Report a vulnerability](https://github.com/rldona/FlupCode/security/advisories/new) form rather
+[Report a vulnerability](https://github.com/plazoleta-dev/FlupCode/security/advisories/new) form rather
 than in a public issue, with steps to reproduce and the affected version. AI-generated reports
 without a verified reproduction will not be reviewed.

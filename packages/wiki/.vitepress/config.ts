@@ -25,14 +25,14 @@ export default defineConfig({
       text: group.text,
       items: group.pages.map((page) => ({ text: page.text, link: `/${page.slug}` })),
     })),
-    socialLinks: [{ icon: "github", link: "https://github.com/rldona/FlupCode" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/plazoleta-dev/FlupCode" }],
     search: { provider: "local" },
     outline: { level: [2, 3] },
     editLink: {
       text: "Edit this page on GitHub",
       // Runs in the browser, so it can only read the page: a doc's file name travels in its params.
       pattern: (page) =>
-        `https://github.com/rldona/FlupCode/edit/main/${page.params?.doc ? `docs/${page.params.doc}` : "packages/wiki/index.md"}`,
+        `https://github.com/plazoleta-dev/FlupCode/edit/main/${page.params?.doc ? `docs/${page.params.doc}` : "packages/wiki/index.md"}`,
     },
     footer: { message: "Released under the MIT License." },
   },

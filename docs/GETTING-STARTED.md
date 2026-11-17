@@ -17,13 +17,13 @@ You only need Bun 1.3+ if you run FlupCode [from source](#from-source).
 
 | I want to…           | Start the engine with                | Open FlupCode                                                         |
 | -------------------- | ------------------------------------ | --------------------------------------------------------------------- |
-| Use an installed app | the app itself                       | [Desktop release](https://github.com/rldona/FlupCode/releases/latest) |
+| Use an installed app | the app itself                       | [Desktop release](https://github.com/plazoleta-dev/FlupCode/releases/latest) |
 | Use it in a browser  | the desktop app, or `flupcode serve` | [app.flupcode.com](https://app.flupcode.com)                          |
 | Run from source      | the desktop app, or `flupcode serve` | `bun run dev:harness`, then `http://localhost:4444`                   |
 
 ## The desktop app
 
-Install it from the [latest release](https://github.com/rldona/FlupCode/releases/latest) and open
+Install it from the [latest release](https://github.com/plazoleta-dev/FlupCode/releases/latest) and open
 it. It starts OpenCode 2 with its own password and its own database, and signs in for you. While it
 is open, **the web app works too**: the desktop answers at `http://127.0.0.1:4096` for
 app.flupcode.com and `localhost:4444` and signs them in.
@@ -31,7 +31,7 @@ app.flupcode.com and `localhost:4444` and signs them in.
 ## The web app without the desktop: `flupcode serve`
 
 Install the `flupcode` binary for your platform from the
-[latest release](https://github.com/rldona/FlupCode/releases/latest) (see
+[latest release](https://github.com/plazoleta-dev/FlupCode/releases/latest) (see
 [USAGE.md](USAGE.md#from-a-terminal-flupcode-remote)), then **leave this running**:
 
 ```bash

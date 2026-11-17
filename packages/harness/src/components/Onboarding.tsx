@@ -25,8 +25,8 @@ type OnboardingProps = {
   onRemote: (name: string) => void
 }
 
-const DESKTOP_DOWNLOAD = "https://github.com/rldona/FlupCode/releases/latest"
-const GETTING_STARTED = "https://github.com/rldona/FlupCode/blob/main/docs/GETTING-STARTED.md"
+const DESKTOP_DOWNLOAD = "https://github.com/plazoleta-dev/FlupCode/releases/latest"
+const GETTING_STARTED = "https://github.com/plazoleta-dev/FlupCode/blob/main/docs/GETTING-STARTED.md"
 
 export const Onboarding: Component<OnboardingProps> = (props) => {
   const [name, setName] = createSignal("")
