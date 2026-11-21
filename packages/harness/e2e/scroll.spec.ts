@@ -1,3 +1,5 @@
+import { createServer, type ServerResponse } from "node:http"
+import type { AddressInfo } from "node:net"
 import { expect, test, type Page } from "@playwright/test"
 
 const now = Date.now()
@@ -280,4 +282,169 @@ test("the engine re-announcing the prompt does not drop the reader", async ({ pa
   // Same row and same place: the re-announced prompt was not rebuilt.
   await expect(row).toHaveAttribute("data-probe", "kept")
   expect(await container.evaluate((element) => Math.round(element.scrollTop))).toBe(bottom)
+})
+
+// A long chat keeps its offscreen rows skipped while it rests, and lays them all out while a turn
+// streams so the growing answer does not re-measure them every frame. Two things used to make the
+// transcript jump when the turn ended: the skip came back with `contain-intrinsic-size: none`, which
+// threw every measured row back to its 180px placeholder (the height collapsed and the reader was
+// thrown up tens of thousands of pixels); and the live text was not marked as streaming, so every
+// delta rendered the whole part as raw text until the parser caught up, and its height bounced
+// between the two renders. This watches a whole turn: the live answer must only grow, and the end
+// must keep the rows above measured.
+test("a long answer streams without the transcript bouncing or collapsing when the turn ends", async ({ page }) => {
+  const tall = {
+    id: "ses_stream_long",
+    projectID: "p",
+    title: "Long answer",
+    cost: 0,
+    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+    time: { created: now, updated: now },
+    location: { directory: "/work/demo" },
+  }
+  const before = Array.from({ length: 40 }, (_, index) => ({
+    id: `msg_${String(index).padStart(3, "0")}`,
+    type: "user",
+    text: `Message ${index}\n\n${"A paragraph of the conversation.\n".repeat(20)}`,
+    time: { created: now + index },
+  }))
+  // Single newlines inside a paragraph: raw text and parsed markdown differ most here, which is what
+  // made the two renders of the live part move the transcript under the reader.
+  const answer = Array.from(
+    { length: 40 },
+    (_, index) => `Paragraph ${index} of the final answer\nwith a second line in it`,
+  ).join("\n")
+
+  let ended = false
+  const streams: ServerResponse[] = []
+  const events = createServer((request, response) => {
+    response.writeHead(200, { "content-type": "text/event-stream", "access-control-allow-origin": "*" })
+    response.write(`data: ${JSON.stringify({ id: "evt_c", type: "server.connected", data: {} })}\n\n`)
+    streams.push(response)
+    request.on("close", () => response.end())
+  })
+  await new Promise<void>((resolve) => events.listen(0, "127.0.0.1", resolve))
+  const eventsUrl = `http://127.0.0.1:${(events.address() as AddressInfo).port}/api/event`
+
+  try {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
+      window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
+      window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_stream_long"))
+    })
+    await page.route("http://127.0.0.1:9/**", (route) => {
+      const url = new URL(route.request().url())
+      if (url.pathname === "/api/info") return route.fulfill({ json: { version: "e2e" } })
+      if (url.pathname === "/api/session") return route.fulfill({ json: { data: [tall], cursor: {} } })
+      if (url.pathname === "/api/session/active")
+        return route.fulfill({ json: { data: ended ? {} : { ses_stream_long: true } } })
+      if (url.pathname === "/api/session/ses_stream_long/message")
+        return route.fulfill({
+          json: {
+            data: ended
+              ? [
+                  ...before,
+                  {
+                    id: "msg_a",
+                    sessionID: "ses_stream_long",
+                    type: "assistant",
+                    agent: "build",
+                    model: { providerID: "openai", id: "gpt" },
+                    cost: 0,
+                    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+                    time: { created: now + 1000, completed: now + 2000 },
+                    content: [{ id: "p_a", type: "text", text: answer }],
+                  },
+                ]
+              : before,
+            cursor: {},
+          },
+        })
+      if (/^\/api\/session\/[^/]+\/(permission|question)/.test(url.pathname))
+        return route.fulfill({ json: { data: [], cursor: {} } })
+      if (url.pathname === "/api/event") return route.continue({ url: eventsUrl })
+      return route.fulfill({ status: 404, json: {} })
+    })
+    await page.goto("/")
+    const container = page.locator(".fc-transcript")
+    await expect(page.getByText("Message 39", { exact: false })).toBeVisible()
+    await expect.poll(() => streams.length).toBe(1)
+    // Let the first paint and its lazy rows settle before measuring.
+    await page.waitForTimeout(600)
+
+    await container.evaluate((element) => {
+      const transcript = element as HTMLElement
+      const probe = {
+        sampling: true,
+        samples: [] as Array<{ height: number; top: number; max: number; streaming: boolean }>,
+      }
+      ;(window as unknown as { probe: typeof probe }).probe = probe
+      const tick = () => {
+        probe.samples.push({
+          height: transcript.scrollHeight,
+          top: transcript.scrollTop,
+          max: transcript.scrollHeight - transcript.clientHeight,
+          streaming: transcript.parentElement?.classList.contains("fc-streaming") ?? false,
+        })
+        if (probe.sampling) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    })
+
+    let eventID = 0
+    const send = (fields: object) =>
+      streams[0]!.write(`data: ${JSON.stringify({ id: `evt_${eventID++}`, created: now, ...fields })}\n\n`)
+    send({ type: "session.execution.started", data: { sessionID: "ses_stream_long" } })
+    send({
+      type: "session.step.started",
+      data: {
+        sessionID: "ses_stream_long",
+        assistantMessageID: "msg_a",
+        agent: "build",
+        model: { providerID: "openai", id: "gpt" },
+        started: now + 1,
+      },
+    })
+    send({ type: "session.text.started", data: { sessionID: "ses_stream_long", assistantMessageID: "msg_a" } })
+    for (const line of answer.split("\n")) {
+      send({
+        type: "session.text.delta",
+        data: { sessionID: "ses_stream_long", assistantMessageID: "msg_a", delta: `${line}\n` },
+      })
+      await page.waitForTimeout(25)
+    }
+
+    ended = true
+    send({
+      type: "session.execution.succeeded",
+      data: { sessionID: "ses_stream_long" },
+    })
+    await page.waitForTimeout(1200)
+
+    const report = await page.evaluate(() => {
+      const probe = (
+        window as unknown as {
+          probe: { sampling: boolean; samples: Array<{ height: number; top: number; max: number; streaming: boolean }> }
+        }
+      ).probe
+      probe.sampling = false
+      return probe.samples
+    })
+    const streaming = report.filter((sample) => sample.streaming)
+    const beforeEnd = streaming.at(-1)?.height ?? 0
+    const last = report.at(-1)!
+    const drops = streaming
+      .slice(1)
+      .map((sample, index) => streaming[index].height - sample.height)
+      .filter((drop) => drop > 0)
+    // The live part grows; it never swaps to a taller raw render and back.
+    expect(Math.max(0, ...drops)).toBeLessThan(24)
+    // The rows above keep their measured height when the skip returns: the transcript does not shrink.
+    expect(last.height).toBeGreaterThan(beforeEnd * 0.9)
+    // And the reader is still at the end of it.
+    expect(last.max - last.top).toBeLessThan(2)
+  } finally {
+    events.closeAllConnections()
+    events.close()
+  }
 })
