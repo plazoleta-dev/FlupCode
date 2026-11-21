@@ -1964,10 +1964,12 @@ button.fc-status {
 
 /* While a turn streams, every message in the window is laid out: a skipped row is measured with its
    placeholder, so each frame that grows the live answer re-measures the ones above and the text
-   flashes. The skip returns when the turn ends, which is when the transcript holds still. */
+   flashes. The skip returns when the turn ends, which is when the transcript holds still. The row
+   keeps the size it was measured at, so its remembered size must survive the switch: resetting it
+   with `contain-intrinsic-size: none` throws every row back to the 180px placeholder and the whole
+   transcript collapses the moment the turn ends. */
 .fc-transcript-frame.fc-streaming .fc-message {
   content-visibility: visible;
-  contain-intrinsic-size: none;
 }
 
 .fc-load-earlier {

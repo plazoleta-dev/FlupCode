@@ -134,7 +134,15 @@ function toAssistant(message: V2Assistant): SessionMessageInfo {
     content: message.content.map((item, index) => {
       // 2.x text and reasoning carry no id; the app keys content by it, and the position is stable.
       const id = `${message.id}:${index}`
-      if (item.type === "text") return { type: "text" as const, id, text: item.text }
+      if (item.type === "text")
+        return {
+          type: "text" as const,
+          id,
+          text: item.text,
+          // A message still open can grow with the next delta, and the view renders its text as it
+          // streams: one parse of the live tail per update instead of a full re-render of the part.
+          ...(!message.time.completed ? { streaming: true } : {}),
+        }
       // Reasoning still arriving has started and not completed: the view says "Thinking…" for it.
       if (item.type === "reasoning")
         return {

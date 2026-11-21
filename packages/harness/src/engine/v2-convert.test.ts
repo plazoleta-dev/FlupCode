@@ -126,6 +126,24 @@ test("reasoning that started and has not completed is still streaming", () => {
   expect(content.map((item) => (item as { streaming?: boolean }).streaming ?? false)).toEqual([false, true])
 })
 
+test("text of a message that is still open streams too, so the view parses it as it grows", () => {
+  const [open] = toMessages([
+    {
+      ...assistant,
+      time: { created: 3 },
+      content: [{ type: "text", text: "Hel" }],
+    } as V2Message,
+  ])
+  const content = open?.type === "assistant" ? open.content : []
+  expect(content[0]).toMatchObject({ type: "text", text: "Hel", streaming: true })
+
+  const [settled] = toMessages([
+    { ...assistant, content: [{ type: "text", text: "Hello" }] } as V2Message,
+  ])
+  const finalContent = settled?.type === "assistant" ? settled.content : []
+  expect((finalContent[0] as { streaming?: boolean }).streaming).toBeUndefined()
+})
+
 test("kinds the app has no view for are dropped, and a running compaction waits for its summary", () => {
   const messages = [
     { id: "m1", type: "user", time: { created: 1 }, text: "hi" },
