@@ -3648,7 +3648,7 @@ button.fc-status {
 }
 
 .fc-switch[aria-checked="true"] {
-  background: var(--fc-accent);
+  background: var(--fc-switch-on);
 }
 
 /* The pale "off" track alone is 1.5:1 on a light canvas; its edge in the secondary text colour keeps

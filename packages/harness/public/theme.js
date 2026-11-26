@@ -37,7 +37,7 @@
       copilot: { light: "#ffffff", dark: "#111114" },
       code: { light: "#ffffff", dark: "#191a1b" },
       vercel: { light: "#000000", dark: "#000000" },
-      claude: { light: "#faf9f5", dark: "#262624" },
+      claude: { light: "#fafafa", dark: "#191919" },
     }
     document.documentElement.style.backgroundColor = backgrounds[palette][dark ? "dark" : "light"]
   } catch {}

@@ -84,8 +84,8 @@
      neutral grey/blue palette; `data-fc-theme="sublime"` is the dark-grey editor palette,
       `data-fc-theme="sublime-dark"` its deeper, dark-only variant, `data-fc-theme="github"`
       the Primer-based light/dark pair, `data-fc-theme="copilot"` the neutral graphite pair,
-      `data-fc-theme="code"` the neutral VS Code editor pair, and `data-fc-theme="claude"` the warm
-      charcoal pair with the terracotta accent.
+      `data-fc-theme="code"` the neutral VS Code editor pair, and `data-fc-theme="claude"` the
+      graphite pair with the amber accent.
 
    Order matters: palette blocks come after `.fc-dark` so a palette overrides the mode defaults.
    Every token set by a palette must also be set by its `.fc-dark` block, otherwise the light
@@ -103,6 +103,9 @@
   --fc-accent: #3563d6;
   --fc-accent-soft: #e8edfb;
   --fc-on-accent: #ffffff;
+  /* The "on" track of a switch. It follows the accent unless a palette gives the switch a colour of
+     its own, as Claude's blue does. */
+  --fc-switch-on: var(--fc-accent);
   --fc-danger: #b42318;
   --fc-success: #0f7a4a;
   --fc-success-soft: #12b76a;
@@ -561,76 +564,80 @@
   --fc-bg-subtle: rgba(255, 255, 255, 0.06);
 }
 
-/* Claude palette: the warm charcoal and terracotta of the Claude Code app. The canvas is a warm
-   near-black, the rail one step deeper, and the only saturated colour is the terracotta that marks
-   what is interactive. The light variant is Claude's cream paper. Keep the two blocks in sync token
+/* Claude palette: the graphite surfaces and amber accents of the current Claude Code app, read off
+   its own screens. The canvas is a neutral near-black, the rail one step lighter (not darker, as in
+   the other dark palettes), and the picked surface is a grey step rather than a tinted one. Amber
+   is the ink for what is interactive; the switch keeps its own blue, and the diffs their bright
+   green and red. The light variant is the same neutrals on paper. Keep the two blocks in sync token
    by token, and cover every token the light block sets. */
 [data-fc-theme="claude"] {
-  --fc-bg: #faf9f5;
+  --fc-bg: #fafafa;
   --fc-bg-elevated: #ffffff;
-  --fc-sidebar: #f0eee6;
-  --fc-border: #e3e1d7;
+  --fc-sidebar: #f0f0f0;
+  --fc-border: #e4e4e4;
   --fc-sidebar-border: transparent;
   --fc-topbar-bg: var(--fc-bg);
   --fc-rightaside-bg: var(--fc-bg);
-  --fc-text: #141413;
-  --fc-text-muted: #6b6a63;
-  --fc-accent: #bd5b3d;
-  --fc-accent-soft: #f6e7e0;
+  --fc-text: #1a1a1a;
+  --fc-text-muted: #6b6b6b;
+  --fc-accent: #9a6a00;
+  --fc-accent-soft: #ebebeb;
   --fc-on-accent: #ffffff;
-  --fc-danger: #b3261e;
-  --fc-success: #3f7d4e;
-  --fc-success-soft: #4a9a5e;
+  --fc-danger: #d1242f;
+  --fc-success: #1a7f37;
+  --fc-success-soft: #2f9e44;
   --fc-warning: #8a5a00;
-  --fc-favorite: #b07a2a;
+  --fc-favorite: #a97a00;
   --fc-merged: #7c5cbf;
-  --fc-diff-add: #3f7d4e;
-  --fc-diff-del: #b3261e;
-  --fc-diff-add-bg: #2ecc71;
-  --fc-diff-del-bg: #e74c3c;
-  --fc-syn-comment: #7a776d;
-  --fc-syn-string: #3f7d4e;
+  --fc-switch-on: #1f6fd0;
+  --fc-diff-add: #1a7f37;
+  --fc-diff-del: #d1242f;
+  --fc-diff-add-bg: #1a7f37;
+  --fc-diff-del-bg: #d1242f;
+  --fc-syn-comment: #7a7a7a;
+  --fc-syn-string: #2f7d4f;
   --fc-syn-number: #8a5a00;
-  --fc-syn-keyword: #a03d1f;
-  --fc-syn-const: #1f5fa8;
-  --fc-code-inline: #a03d1f;
-  --fc-terminal-bg: #1f1e1d;
-  --fc-terminal-fg: #f5f4ef;
-  --fc-bg-subtle: rgba(20, 20, 19, 0.05);
+  --fc-syn-keyword: #1f5fa8;
+  --fc-syn-const: #7c5cbf;
+  --fc-code-inline: #4a4a4a;
+  --fc-terminal-bg: #191919;
+  --fc-terminal-fg: #efefef;
+  --fc-bg-subtle: rgba(25, 25, 25, 0.06);
 }
 
 [data-fc-theme="claude"].fc-dark {
-  --fc-bg: #262624;
-  --fc-bg-elevated: #30302e;
-  --fc-sidebar: #1f1e1d;
-  --fc-border: #3d3c38;
+  --fc-bg: #191919;
+  --fc-bg-elevated: #1f1f1f;
+  --fc-sidebar: #262626;
+  --fc-border: #303030;
   --fc-sidebar-border: transparent;
   --fc-topbar-bg: var(--fc-bg);
   --fc-rightaside-bg: var(--fc-bg);
-  --fc-text: #f5f4ef;
-  --fc-text-muted: #a8a69e;
-  --fc-accent: #d97757;
-  --fc-accent-soft: rgba(217, 119, 87, 0.16);
-  --fc-on-accent: #ffffff;
-  --fc-danger: #f08c7c;
-  --fc-success: #9ad39b;
-  --fc-success-soft: #4a9a5e;
-  --fc-warning: #e6b96a;
-  --fc-favorite: #d4a27f;
-  --fc-merged: #c4a7e7;
-  --fc-diff-add: #9ad39b;
-  --fc-diff-del: #f08c7c;
-  --fc-diff-add-bg: #2ecc71;
-  --fc-diff-del-bg: #e74c3c;
-  --fc-syn-comment: #8a877e;
-  --fc-syn-string: #9ad39b;
-  --fc-syn-number: #e6b96a;
-  --fc-syn-keyword: #e5967a;
-  --fc-syn-const: #9ecbff;
-  --fc-code-inline: #e3a184;
-  --fc-terminal-bg: #1f1e1d;
-  --fc-terminal-fg: #f5f4ef;
-  --fc-bg-subtle: rgba(245, 244, 239, 0.06);
+  --fc-text: #efefef;
+  --fc-text-muted: #9c9c9c;
+  --fc-accent: #e39c08;
+  --fc-accent-soft: #3b3b3b;
+  --fc-on-accent: #191919;
+  --fc-danger: #ff6b6b;
+  --fc-success: #32d74b;
+  --fc-success-soft: #32d74b;
+  --fc-warning: #f9b114;
+  --fc-favorite: #f9b114;
+  --fc-merged: #b796ff;
+  --fc-switch-on: #257de0;
+  --fc-diff-add: #32d74b;
+  --fc-diff-del: #ff2c56;
+  --fc-diff-add-bg: #32d74b;
+  --fc-diff-del-bg: #ff2c56;
+  --fc-syn-comment: #7d7d7d;
+  --fc-syn-string: #a8c98a;
+  --fc-syn-number: #f9b114;
+  --fc-syn-keyword: #7aa2f7;
+  --fc-syn-const: #b796ff;
+  --fc-code-inline: #dcdcdc;
+  --fc-terminal-bg: #191919;
+  --fc-terminal-fg: #efefef;
+  --fc-bg-subtle: rgba(255, 255, 255, 0.06);
 }
 
 /* Sublime dark: the deeper, dark-only cut of the Sublime palette. It has no light variant on
