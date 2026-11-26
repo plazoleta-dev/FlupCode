@@ -74,6 +74,7 @@ renders no upstream UI components, so a palette change re-skins all of it.
 | `--fc-text-muted` | `#5b6075` | `#8e94ab` | Secondary text, focus ring |
 | `--fc-accent` | `#3563d6` | `#5b8cff` | What needs the person; links; the picked option's edge |
 | `--fc-accent-soft` | `#e8edfb` | `#16223f` | The picked option's background |
+| `--fc-switch-on` | `var(--fc-accent)` | `var(--fc-accent)` | A switch's "on" track, when a palette gives it a colour of its own |
 | `--fc-success` | `#0f7a4a` | `#7ee2a8` | Verified, passed |
 | `--fc-warning` | `#8a5a00` | `#f5b80c` | Waiting, not verified, estimated |
 | `--fc-danger` | `#b42318` | `#f19a90` | Failed, destructive |
@@ -210,7 +211,8 @@ Theming has two independent axes, both applied to `<html>`:
   attribute. The others are alternatives a person can pick, not the product's look: `classic`
   (neutral grey and blue), `sublime` (dark grey) and its deeper, dark-only `sublime-dark`, `github`
   (a light/dark pair), `copilot` (neutral graphite), `code` (a neutral editor pair), `vercel`
-  (black, dark-only) and `claude` (warm charcoal and cream, with the terracotta accent).
+  (black, dark-only) and `claude` (graphite greys with the amber accent, a lighter rail and the
+  switch in blue).
 
 Each palette normally defines a light and a dark variant (`.fc-dark`), so the two axes multiply.
 Palette blocks in `tokens.css` come after `.fc-dark` and must be overridden by a

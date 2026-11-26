@@ -31,8 +31,8 @@ const SAVED_PALETTES = [
   // Dark-only too: the dashboard's theme is black whatever the mode says.
   { id: "vercel", mode: "light", background: "rgb(0, 0, 0)" },
   { id: "vercel", mode: "dark", background: "rgb(0, 0, 0)" },
-  { id: "claude", mode: "light", background: "rgb(250, 249, 245)" },
-  { id: "claude", mode: "dark", background: "rgb(38, 38, 36)" },
+  { id: "claude", mode: "light", background: "rgb(250, 250, 250)" },
+  { id: "claude", mode: "dark", background: "rgb(25, 25, 25)" },
 ]
 
 for (const saved of SAVED_PALETTES) {
