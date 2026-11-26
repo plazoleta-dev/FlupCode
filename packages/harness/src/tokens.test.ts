@@ -321,8 +321,10 @@ describe("type (UX-06)", () => {
 
   test("docs/DESIGN.md sets FlupCode's own direction, not another product's", () => {
     // It used to open with "The target look is the Anthropic Claude Code desktop harness" (audit P1).
+    // A palette may carry a product's name (github, vercel, copilot, claude); the brief may not.
     const design = readFileSync(join(import.meta.dir, "..", "..", "..", "docs", "DESIGN.md"), "utf8")
-    expect(design).not.toMatch(/target look|Claude|Anthropic|OpenChamber|-style palette/i)
+    expect(design).not.toMatch(/target look|Anthropic|OpenChamber|-style palette/i)
+    expect(design).not.toMatch(/the look (?:is|should be) [^.]*Claude/i)
     expect(design).toContain("supervised, verified and costed")
   })
 

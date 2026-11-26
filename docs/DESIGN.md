@@ -209,8 +209,8 @@ Theming has two independent axes, both applied to `<html>`:
   palette (navy and blue, shared with `packages/landing/styles.css`) is the default and has no
   attribute. The others are alternatives a person can pick, not the product's look: `classic`
   (neutral grey and blue), `sublime` (dark grey) and its deeper, dark-only `sublime-dark`, `github`
-  (a light/dark pair), `copilot` (neutral graphite), `code` (a neutral editor pair) and `vercel`
-  (black, dark-only).
+  (a light/dark pair), `copilot` (neutral graphite), `code` (a neutral editor pair), `vercel`
+  (black, dark-only) and `claude` (warm charcoal and cream, with the terracotta accent).
 
 Each palette normally defines a light and a dark variant (`.fc-dark`), so the two axes multiply.
 Palette blocks in `tokens.css` come after `.fc-dark` and must be overridden by a

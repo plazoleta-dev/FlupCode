@@ -83,8 +83,9 @@
      (the default, taken from the landing page); `data-fc-theme="classic"` is the original
      neutral grey/blue palette; `data-fc-theme="sublime"` is the dark-grey editor palette,
       `data-fc-theme="sublime-dark"` its deeper, dark-only variant, `data-fc-theme="github"`
-      the Primer-based light/dark pair, `data-fc-theme="copilot"` the neutral graphite pair, and
-      `data-fc-theme="code"` the neutral VS Code editor pair.
+      the Primer-based light/dark pair, `data-fc-theme="copilot"` the neutral graphite pair,
+      `data-fc-theme="code"` the neutral VS Code editor pair, and `data-fc-theme="claude"` the warm
+      charcoal pair with the terracotta accent.
 
    Order matters: palette blocks come after `.fc-dark` so a palette overrides the mode defaults.
    Every token set by a palette must also be set by its `.fc-dark` block, otherwise the light
@@ -558,6 +559,78 @@
   --fc-terminal-bg: #0d0e0f;
   --fc-terminal-fg: #d4d4d4;
   --fc-bg-subtle: rgba(255, 255, 255, 0.06);
+}
+
+/* Claude palette: the warm charcoal and terracotta of the Claude Code app. The canvas is a warm
+   near-black, the rail one step deeper, and the only saturated colour is the terracotta that marks
+   what is interactive. The light variant is Claude's cream paper. Keep the two blocks in sync token
+   by token, and cover every token the light block sets. */
+[data-fc-theme="claude"] {
+  --fc-bg: #faf9f5;
+  --fc-bg-elevated: #ffffff;
+  --fc-sidebar: #f0eee6;
+  --fc-border: #e3e1d7;
+  --fc-sidebar-border: transparent;
+  --fc-topbar-bg: var(--fc-bg);
+  --fc-rightaside-bg: var(--fc-bg);
+  --fc-text: #141413;
+  --fc-text-muted: #6b6a63;
+  --fc-accent: #bd5b3d;
+  --fc-accent-soft: #f6e7e0;
+  --fc-on-accent: #ffffff;
+  --fc-danger: #b3261e;
+  --fc-success: #3f7d4e;
+  --fc-success-soft: #4a9a5e;
+  --fc-warning: #8a5a00;
+  --fc-favorite: #b07a2a;
+  --fc-merged: #7c5cbf;
+  --fc-diff-add: #3f7d4e;
+  --fc-diff-del: #b3261e;
+  --fc-diff-add-bg: #2ecc71;
+  --fc-diff-del-bg: #e74c3c;
+  --fc-syn-comment: #7a776d;
+  --fc-syn-string: #3f7d4e;
+  --fc-syn-number: #8a5a00;
+  --fc-syn-keyword: #a03d1f;
+  --fc-syn-const: #1f5fa8;
+  --fc-code-inline: #a03d1f;
+  --fc-terminal-bg: #1f1e1d;
+  --fc-terminal-fg: #f5f4ef;
+  --fc-bg-subtle: rgba(20, 20, 19, 0.05);
+}
+
+[data-fc-theme="claude"].fc-dark {
+  --fc-bg: #262624;
+  --fc-bg-elevated: #30302e;
+  --fc-sidebar: #1f1e1d;
+  --fc-border: #3d3c38;
+  --fc-sidebar-border: transparent;
+  --fc-topbar-bg: var(--fc-bg);
+  --fc-rightaside-bg: var(--fc-bg);
+  --fc-text: #f5f4ef;
+  --fc-text-muted: #a8a69e;
+  --fc-accent: #d97757;
+  --fc-accent-soft: rgba(217, 119, 87, 0.16);
+  --fc-on-accent: #ffffff;
+  --fc-danger: #f08c7c;
+  --fc-success: #9ad39b;
+  --fc-success-soft: #4a9a5e;
+  --fc-warning: #e6b96a;
+  --fc-favorite: #d4a27f;
+  --fc-merged: #c4a7e7;
+  --fc-diff-add: #9ad39b;
+  --fc-diff-del: #f08c7c;
+  --fc-diff-add-bg: #2ecc71;
+  --fc-diff-del-bg: #e74c3c;
+  --fc-syn-comment: #8a877e;
+  --fc-syn-string: #9ad39b;
+  --fc-syn-number: #e6b96a;
+  --fc-syn-keyword: #e5967a;
+  --fc-syn-const: #9ecbff;
+  --fc-code-inline: #e3a184;
+  --fc-terminal-bg: #1f1e1d;
+  --fc-terminal-fg: #f5f4ef;
+  --fc-bg-subtle: rgba(245, 244, 239, 0.06);
 }
 
 /* Sublime dark: the deeper, dark-only cut of the Sublime palette. It has no light variant on

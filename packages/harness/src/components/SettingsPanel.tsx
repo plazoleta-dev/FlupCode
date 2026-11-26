@@ -276,6 +276,7 @@ export const SettingsPanel: Component<SettingsPanelProps> = (props) => {
                   <option value="classic">{t("Classic")}</option>
                   <option value="github">{t("GitHub")}</option>
                   <option value="vercel">{t("Vercel")}</option>
+                  <option value="claude">{t("Claude")}</option>
                   <option value="copilot">{t("Copilot")}</option>
                   <option value="code">{t("Code")}</option>
                   <option value="sublime">{t("Sublime Light")}</option>

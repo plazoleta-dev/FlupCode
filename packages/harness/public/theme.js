@@ -23,6 +23,7 @@
         copilot: "copilot",
         code: "code",
         vercel: "vercel",
+        claude: "claude",
       }[saved] ?? "flupcode"
     document.documentElement.classList.toggle("fc-dark", dark)
     if (palette !== "flupcode") document.documentElement.dataset.fcTheme = palette
@@ -36,6 +37,7 @@
       copilot: { light: "#ffffff", dark: "#111114" },
       code: { light: "#ffffff", dark: "#191a1b" },
       vercel: { light: "#000000", dark: "#000000" },
+      claude: { light: "#faf9f5", dark: "#262624" },
     }
     document.documentElement.style.backgroundColor = backgrounds[palette][dark ? "dark" : "light"]
   } catch {}

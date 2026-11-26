@@ -27,6 +27,7 @@ function readColorTheme() {
   if (saved === "copilot") return "copilot"
   if (saved === "code") return "code"
   if (saved === "vercel") return "vercel"
+  if (saved === "claude") return "claude"
   return "flupcode"
 }
 
