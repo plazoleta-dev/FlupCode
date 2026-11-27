@@ -156,10 +156,9 @@ test("the top-right buttons keep their order, and the connection closes the row"
   const at = (label: string) => labels.indexOf(label)
   expect(at("Session rail")).toBeGreaterThanOrEqual(0)
   expect(at("Session rail")).toBeLessThan(at("Terminal"))
-  expect(at("Terminal")).toBeLessThan(at("Files changed"))
-  expect(at("Files changed")).toBeLessThan(at("Agent browser"))
-  expect(at("Agent browser")).toBeLessThan(at("Preview"))
-  expect(at("Preview")).toBeLessThan(at("Menu"))
+  // Files changed, Agent browser and Preview no longer have a toggle here; the terminal is the last
+  // panel button before the session's own menu.
+  expect(at("Terminal")).toBeLessThan(at("Menu"))
   // The connection pill is the last thing in the row.
   await expect(page.locator(".fc-topbar-right > :last-child")).toHaveClass(/fc-status/)
 })

@@ -63,9 +63,6 @@ export function TopStrip() {
       <Topbar
         showTabs={app.settings.desktopWindow() || app.settings.collapsed()}
         showEngineStatus={app.settings.desktopWindow()}
-        showAgentBrowser={app.settings.desktopWindow()}
-        // The preview shows this machine's dev servers, not those of the computer being driven.
-        showPreview={!!window.flupcode?.preview && !remote.activeHost()}
         streamState={app.sessions.streamState()}
         blockedElsewhere={app.sessions.blockedElsewhere()}
         onOpenBlocked={app.sessions.selectSession}
