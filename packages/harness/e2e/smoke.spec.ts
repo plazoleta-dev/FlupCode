@@ -175,8 +175,8 @@ test("the Chat tab shows its own home, input and top bar, and is remembered", as
     window.localStorage.setItem("flupcode.displayName", JSON.stringify("Raúl"))
   })
   await page.goto("/")
-  const files = page.getByRole("button", { name: "Files changed" })
-  await expect(files).toBeVisible()
+  const terminal = page.getByRole("button", { name: "Terminal" })
+  await expect(terminal).toBeVisible()
 
   // The tabs sit next to the FlupCode name at the top of the sidebar, and move to the top bar while
   // it is hidden. Scoped to the view tablist: the chat composer has a "Chat" tab of its own, and a
@@ -188,8 +188,7 @@ test("the Chat tab shows its own home, input and top bar, and is remembered", as
   await expect(viewTab).toHaveAttribute("aria-selected", "true")
   await expect(page.locator(".fc-chat-greeting")).toContainText("Raúl")
   // Chats have no workspace panels, folder, agent or permission controls.
-  await expect(files).toHaveCount(0)
-  await expect(page.getByRole("button", { name: "Terminal" })).toHaveCount(0)
+  await expect(terminal).toHaveCount(0)
   await expect(page.locator(".fc-composer .fc-folder-button")).toHaveCount(0)
   const input = page.locator(".fc-composer textarea.fc-input")
   await expect(input).toHaveAttribute("placeholder", "Write a message…")
@@ -208,7 +207,7 @@ test("the Chat tab shows its own home, input and top bar, and is remembered", as
     "true",
   )
   await page.locator(".fc-view-tabs").getByRole("tab", { name: "Code" }).click()
-  await expect(page.getByRole("button", { name: "Files changed" })).toBeVisible()
+  await expect(page.getByRole("button", { name: "Terminal" })).toBeVisible()
   await expect(page.locator(".fc-chat-greeting")).toHaveCount(0)
 })
 

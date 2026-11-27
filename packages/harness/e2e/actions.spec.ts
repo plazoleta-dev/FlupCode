@@ -49,15 +49,21 @@ type Calls = {
   sent: Array<Record<string, unknown>>
 }
 
-async function setup(page: Page, desktop: boolean) {
+async function setup(page: Page, desktop: boolean, panels: string[] = []) {
   const calls: Calls = { saves: [], previews: [], validates: 0, viewports: [], takeovers: 0, sent: [] }
-  await page.addInitScript((isDesktop) => {
-    if (isDesktop) window.flupcode = { ownsTitleBar: true }
-    window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
-    window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
-    window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
-    window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_actions"))
-  }, desktop)
+  await page.addInitScript(
+    (config) => {
+      if (config.desktop) window.flupcode = { ownsTitleBar: true }
+      window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
+      window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
+      window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
+      window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_actions"))
+      // The top bar no longer carries toggles for these panels: they open from the stored set.
+      if (config.panels.length > 0)
+        window.localStorage.setItem("flupcode.workspacePanels", JSON.stringify(config.panels))
+    },
+    { desktop, panels },
+  )
   await page.route("http://127.0.0.1:9097/**", (route) => {
     const request = route.request()
     const url = new URL(request.url())
@@ -222,20 +228,17 @@ test("/actions with a request sends it to the agent instead of opening the scree
   await expect(page.locator(".fc-actions-screen")).toHaveCount(0)
 })
 
-test("hides Actions and the agent browser toggle outside the desktop app", async ({ page }) => {
+test("hides Actions outside the desktop app", async ({ page }) => {
   await setup(page, false)
   // The Code nav rendered, so absence below is the web build hiding entries, not a loading page.
   await expect(page.locator(".fc-nav").getByRole("button", { name: /Runs/ })).toBeVisible()
   await page.locator(".fc-profile-button").click()
   await expect(page.locator(".fc-menu").getByText("Remote control", { exact: true })).toBeVisible()
   await expect(page.locator(".fc-menu").getByText(/^(Actions|Acciones)$/)).toHaveCount(0)
-  await page.keyboard.press("Escape")
-  await expect(page.getByRole("button", { name: /Agent browser|Navegador del agente/ })).toHaveCount(0)
 })
 
 test("sizes the live agent browser to its panel and takes over an idle session", async ({ page }) => {
-  const { calls } = await setup(page, true)
-  await page.getByRole("button", { name: /Agent browser|Navegador del agente/ }).click()
+  const { calls } = await setup(page, true, ["agent-browser"])
   const panel = page.locator(".fc-agent-browser")
   await expect(panel.locator(".fc-agent-browser-viewport")).toBeVisible()
 

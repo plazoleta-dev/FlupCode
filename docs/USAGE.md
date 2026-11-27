@@ -402,8 +402,8 @@ does not stop the run unless a later task says `require: verified`.
 
 ## Preview
 
-The desktop app shows your dev server next to the session: the window icon in the top bar opens the
-**Preview — not your browser** panel. It is a page of its own, with its own cookies, not your
+The desktop app shows your dev server next to the session in the **Preview — not your browser**
+panel, which a preview run opens by itself. It is a page of its own, with its own cookies, not your
 browser and not the agent's browser.
 
 - **Empty state.** It lists the web servers running on this machine, those started from the
@@ -575,8 +575,7 @@ caps at 5, so a run cannot loop.
 ## Changes, and committing
 
 **Changes** (`/changes`) is the diff viewer. Get there from the `+N −M` counts on the bar above the
-composer, or from **Open the diff viewer** in the Files changed panel — that panel is 420 pixels
-wide and a line of code usually is not.
+composer.
 
 Two views, and they answer different questions:
 

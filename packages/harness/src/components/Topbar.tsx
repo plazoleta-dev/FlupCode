@@ -36,13 +36,6 @@ type TopbarProps = {
   contextPanel?: { open: boolean; onToggle: () => void }
   /** The project's file tree, a screen of its own beside the session rail. */
   files?: { open: boolean; onToggle: () => void }
-  /**
-   * The agent-browser panel toggle. Only the desktop app shows it: the live browser view it opens
-   * is not operative in the browser build.
-   */
-  showAgentBrowser: boolean
-  /** The preview toggle (BU-06): only where the desktop app hosts one. */
-  showPreview?: boolean
   onTogglePanel: (kind: string) => void
   /** The workspace panels open right now, so their buttons can show it. */
   openPanels: string[]
@@ -156,43 +149,6 @@ export const Topbar: Component<TopbarProps> = (props) => {
           >
             <Icon name="terminal" size={16} />
           </button>
-          <button
-            class="fc-nav-arrow"
-            classList={{ "fc-nav-arrow-active": props.openPanels.includes("diff") }}
-            type="button"
-            title={t("Files changed")}
-            aria-label={t("Files changed")}
-            aria-pressed={props.openPanels.includes("diff")}
-            onClick={() => props.onTogglePanel("diff")}
-          >
-            <Icon name="file" size={16} />
-          </button>
-          <Show when={props.showAgentBrowser}>
-            <button
-              class="fc-nav-arrow"
-              classList={{ "fc-nav-arrow-active": props.openPanels.includes("agent-browser") }}
-              type="button"
-              title={t("Agent browser")}
-              aria-label={t("Agent browser")}
-              aria-pressed={props.openPanels.includes("agent-browser")}
-              onClick={() => props.onTogglePanel("agent-browser")}
-            >
-              <Icon name="eye" size={16} />
-            </button>
-          </Show>
-          <Show when={props.showPreview}>
-            <button
-              class="fc-nav-arrow"
-              classList={{ "fc-nav-arrow-active": props.openPanels.includes("preview") }}
-              type="button"
-              title={t("Preview")}
-              aria-label={t("Preview")}
-              aria-pressed={props.openPanels.includes("preview")}
-              onClick={() => props.onTogglePanel("preview")}
-            >
-              <Icon name="preview" size={16} />
-            </button>
-          </Show>
         </Show>
         <Show when={props.files}>
           {(files) => (
