@@ -575,7 +575,7 @@
   --fc-bg-elevated: #ffffff;
   --fc-sidebar: #f0f0f0;
   --fc-border: #e4e4e4;
-  --fc-sidebar-border: transparent;
+  --fc-sidebar-border: #dfdfdf;
   --fc-topbar-bg: var(--fc-bg);
   --fc-rightaside-bg: var(--fc-bg);
   --fc-text: #1a1a1a;
@@ -610,7 +610,7 @@
   --fc-bg-elevated: #1f1f1f;
   --fc-sidebar: #262626;
   --fc-border: #303030;
-  --fc-sidebar-border: transparent;
+  --fc-sidebar-border: #3b3b3b;
   --fc-topbar-bg: var(--fc-bg);
   --fc-rightaside-bg: var(--fc-bg);
   --fc-text: #efefef;
