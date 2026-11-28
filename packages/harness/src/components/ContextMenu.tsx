@@ -7,6 +7,8 @@ export type MenuItem =
       label: string
       icon?: IconName
       shortcut?: string
+      /** A panel or a view this item turns on: it shows a check while it is on. */
+      checked?: boolean
       danger?: boolean
       disabled?: boolean
       onSelect: () => void
@@ -156,6 +158,11 @@ export const ContextMenu: Component<ContextMenuProps> = (props) => {
             >
               <span class="fc-menu-icon">{item.icon && <Icon name={item.icon} />}</span>
               <span class="fc-menu-label">{item.label}</span>
+              <Show when={item.checked}>
+                <span class="fc-menu-check" aria-hidden="true">
+                  <Icon name="check" />
+                </span>
+              </Show>
               <Show when={item.shortcut}>
                 <span class="fc-menu-shortcut">{item.shortcut}</span>
               </Show>

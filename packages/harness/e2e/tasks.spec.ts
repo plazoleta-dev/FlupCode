@@ -163,6 +163,20 @@ test("the top-right buttons keep their order, and the connection closes the row"
   await expect(page.locator(".fc-topbar-right > :last-child")).toHaveClass(/fc-status/)
 })
 
+test("the session menu opens the panels that left the bar, and says which are on", async ({ page }) => {
+  await openSession(page, { desktop: true })
+  const menu = page.getByRole("button", { name: "Menu" })
+  await menu.click()
+  // The desktop app offers all three; the web build offers only the diff.
+  await expect(page.locator(".fc-menu").getByText("Files changed", { exact: true })).toBeVisible()
+  await expect(page.locator(".fc-menu").getByText("Agent browser", { exact: true })).toBeVisible()
+  await expect(page.locator(".fc-menu").getByText("Preview", { exact: true })).toBeVisible()
+  await page.locator(".fc-menu").getByText("Files changed", { exact: true }).click()
+  await expect(page.locator(".fc-panel-title")).toHaveText(["Files changed"])
+  await menu.click()
+  await expect(page.locator(".fc-menu .fc-menu-check")).toHaveCount(1)
+})
+
 test("the rail reads at the size of the sidebar's navigation", async ({ page }) => {
   await openSession(page, { tasks: [{ content: "Leer extractos", status: "completed" }] })
   await page.getByRole("button", { name: /^(Session rail|Panel de la sesión)$/ }).click()

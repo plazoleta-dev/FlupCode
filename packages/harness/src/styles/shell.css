@@ -205,6 +205,12 @@ select:focus-visible,
   font-size: var(--fc-text-xs);
 }
 
+.fc-menu-check {
+  flex-shrink: 0;
+  display: inline-flex;
+  color: var(--fc-accent);
+}
+
 .fc-menu-item-danger .fc-menu-label,
 .fc-menu-item-danger .fc-menu-icon {
   color: var(--fc-danger);

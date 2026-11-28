@@ -4,8 +4,8 @@ import type { ProjectItem } from "../types"
 import { t } from "../i18n"
 import { isCoworkSession } from "../chat"
 import { sessionTitle } from "../session-title"
-import { ContextMenu, type MenuItem } from "./ContextMenu"
-import { Icon } from "./Icon"
+import { ContextMenu, separator, type MenuItem } from "./ContextMenu"
+import { Icon, type IconName } from "./Icon"
 
 type SessionTitleProps = {
   session: SessionInfo
@@ -81,12 +81,33 @@ type SessionActionsProps = {
   onUndo: () => void
   onRedo: () => void
   onCommitRevert: () => void
+  /** The workspace panels this session can turn on from here, and the ones already on. */
+  panels?: { entries: Array<{ kind: string; label: string; icon: IconName }>; open: string[]; onToggle: (kind: string) => void }
 }
 
 export const SessionActions: Component<SessionActionsProps> = (props) => {
   const [menu, setMenu] = createSignal<{ x: number; y: number; items: MenuItem[] }>()
 
+  // The panels live in here rather than in the bar itself: the bar keeps the terminal and the file
+  // tree, and what opens beside the session is one click away.
+  const panelItems = (): MenuItem[] => {
+    const panels = props.panels
+    if (!panels || panels.entries.length === 0) return []
+    return [
+      ...panels.entries.map(
+        (entry): MenuItem => ({
+          label: entry.label,
+          icon: entry.icon,
+          checked: panels.open.includes(entry.kind),
+          onSelect: () => panels.onToggle(entry.kind),
+        }),
+      ),
+      separator,
+    ]
+  }
+
   const items = (): MenuItem[] => [
+    ...panelItems(),
     { label: t("Fork"), icon: "fork", onSelect: props.onFork },
     { label: t("Compact"), icon: "compact", onSelect: props.onCompact },
     { label: t("Undo"), icon: "undo", onSelect: props.onUndo },

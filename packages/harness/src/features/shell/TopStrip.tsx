@@ -17,6 +17,20 @@ import { Icon } from "../../components/Icon"
  */
 export function TopStrip() {
   const app = useApp()
+  // What the session menu can open beside the session. The agent browser needs the desktop app, and
+  // the preview shows this machine's dev servers, not those of a computer being driven.
+  const panelEntries = () => {
+    if (!app.sessions.codeChrome() || app.router.toolScreen()) return []
+    return [
+      { kind: "diff", label: t("Files changed"), icon: "file" as const },
+      ...(app.settings.desktopWindow()
+        ? [{ kind: "agent-browser", label: t("Agent browser"), icon: "eye" as const }]
+        : []),
+      ...(window.flupcode?.preview && !remote.activeHost()
+        ? [{ kind: "preview", label: t("Preview"), icon: "preview" as const }]
+        : []),
+    ]
+  }
   return (
     <Show
       when={!app.settings.mobileRemote()}
@@ -131,6 +145,7 @@ export function TopStrip() {
                 onUndo={app.sessions.undo}
                 onRedo={app.sessions.redo}
                 onCommitRevert={app.sessions.commitRevert}
+                panels={{ entries: panelEntries(), open: app.settings.panels(), onToggle: app.settings.togglePanel }}
               />
             )}
           </Show>
