@@ -49,21 +49,15 @@ type Calls = {
   sent: Array<Record<string, unknown>>
 }
 
-async function setup(page: Page, desktop: boolean, panels: string[] = []) {
+async function setup(page: Page, desktop: boolean) {
   const calls: Calls = { saves: [], previews: [], validates: 0, viewports: [], takeovers: 0, sent: [] }
-  await page.addInitScript(
-    (config) => {
-      if (config.desktop) window.flupcode = { ownsTitleBar: true }
-      window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
-      window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
-      window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
-      window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_actions"))
-      // The top bar no longer carries toggles for these panels: they open from the stored set.
-      if (config.panels.length > 0)
-        window.localStorage.setItem("flupcode.workspacePanels", JSON.stringify(config.panels))
-    },
-    { desktop, panels },
-  )
+  await page.addInitScript((isDesktop) => {
+    if (isDesktop) window.flupcode = { ownsTitleBar: true }
+    window.localStorage.setItem("flupcode.onboarded", JSON.stringify(true))
+    window.localStorage.setItem("flupcode.serverUrl", JSON.stringify("http://127.0.0.1:9"))
+    window.localStorage.setItem("flupcode.harnessServerUrl", JSON.stringify("http://127.0.0.1:9097"))
+    window.localStorage.setItem("flupcode.selectedSession", JSON.stringify("ses_actions"))
+  }, desktop)
   await page.route("http://127.0.0.1:9097/**", (route) => {
     const request = route.request()
     const url = new URL(request.url())
@@ -235,10 +229,16 @@ test("hides Actions outside the desktop app", async ({ page }) => {
   await page.locator(".fc-profile-button").click()
   await expect(page.locator(".fc-menu").getByText("Remote control", { exact: true })).toBeVisible()
   await expect(page.locator(".fc-menu").getByText(/^(Actions|Acciones)$/)).toHaveCount(0)
+  await page.keyboard.press("Escape")
+  // The agent browser needs the desktop app, so its menu entry is not offered here.
+  await page.getByRole("button", { name: "Menu" }).click()
+  await expect(page.locator(".fc-menu").getByText(/^(Agent browser|Navegador del agente)$/)).toHaveCount(0)
 })
 
 test("sizes the live agent browser to its panel and takes over an idle session", async ({ page }) => {
-  const { calls } = await setup(page, true, ["agent-browser"])
+  const { calls } = await setup(page, true)
+  await page.getByRole("button", { name: "Menu" }).click()
+  await page.locator(".fc-menu").getByText(/^(Agent browser|Navegador del agente)$/).click()
   const panel = page.locator(".fc-agent-browser")
   await expect(panel.locator(".fc-agent-browser-viewport")).toBeVisible()
 

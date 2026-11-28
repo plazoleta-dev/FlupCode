@@ -403,8 +403,8 @@ does not stop the run unless a later task says `require: verified`.
 ## Preview
 
 The desktop app shows your dev server next to the session in the **Preview — not your browser**
-panel, which a preview run opens by itself. It is a page of its own, with its own cookies, not your
-browser and not the agent's browser.
+panel, opened from **Preview** in the session menu (`…`) or by a preview run. It is a page of its
+own, with its own cookies, not your browser and not the agent's browser.
 
 - **Empty state.** It lists the web servers running on this machine, those started from the
   session's folder first; the rest are under *Other servers on this machine*. Start your dev server
@@ -575,7 +575,8 @@ caps at 5, so a run cannot loop.
 ## Changes, and committing
 
 **Changes** (`/changes`) is the diff viewer. Get there from the `+N −M` counts on the bar above the
-composer.
+composer, or from **Files changed** in the session menu (`…`), which opens the narrow panel beside
+the conversation.
 
 Two views, and they answer different questions:
 
